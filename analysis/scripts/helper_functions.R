@@ -3,7 +3,7 @@ get_model_samples <- function(my_model) {
   my_samples <- posterior_samples(my_model)
   
   names(my_samples)  %>% 
-    gsub('[b_]*wallpaper_group', "", .) -> names(my_samples)
+    gsub('[b_]*wg', "", .) -> names(my_samples)
   
   return(my_samples)
 }
@@ -23,7 +23,7 @@ plot_model_output <- function(mdat, edat, my_title, my_colour, x_label) {
   # plot model fit (mdat) against empiricaly data (edat)
   plt <- ggplot(mdat, aes(x = value, y = key)) +
     stat_pointintervalh(.width = c(.66, .95), colour = my_colour) +
-    geom_density_ridges(data = edat,aes_string(x = x_var, "wallpaper_group"),
+    geom_density_ridges(data = edat,aes_string(x = x_var, "wg"),
                         fill = "grey",
                         alpha = 0.25,
                         scale = 2,

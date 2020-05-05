@@ -56,8 +56,9 @@ Here we import our data and make some sumamry plots.
 
 ### EEG Data
 
-Importing the odd-harmonic EEG data from six electrodes region-of-interest over occipital cortex. 
+Importing the odd-harmonic EEG data from six electrodes region-of-interest over occipital cortex.
 
+\tiny
 ```{r eeg_import}
 fl <- "rms_Occ_Odd.csv"
 
@@ -69,8 +70,8 @@ my_cols <- cols(
 
 #import
 read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
-  rename(wallpaper_group = "Row") %>%
-  gather("subject", "rms", -wallpaper_group) %>%
+  rename(wg = "Row") %>%
+  gather("subject", "rms", -wg) %>%
   glimpse() -> d_eeg 
 ```
  
@@ -98,7 +99,7 @@ my_cols_threshold <- cols(
 )
 
 read_csv("../Experiment/process_results/thresholds.csv", col_types = my_cols_threshold) %>%
-  select(subject = "person", wallpaper_group = "group", threshold) %>%
+  select(subject = "person", wg = "group", threshold) %>%
   glimpse() -> d_dispthresh 
 
 rm(my_cols_threshold)
@@ -124,14 +125,14 @@ from six parietal electrodes (see main paper).
 fl <- "rms_Occ_Even.csv"
 
 read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
-  rename(wallpaper_group = "Row") %>%
-  gather("subject", "rms", -wallpaper_group) -> d_eeg_occ_even
+  rename(wg = "Row") %>%
+  gather("subject", "rms", -wg) -> d_eeg_occ_even
 
 fl <- "rms_Par_Odd.csv"
 
 read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
-  rename(wallpaper_group = "Row") %>%
-  gather("subject", "rms", -wallpaper_group) -> d_eeg_par_odd
+  rename(wg = "Row") %>%
+  gather("subject", "rms", -wg) -> d_eeg_par_odd
 
 rm(my_cols, fl)
 ```
@@ -174,7 +175,7 @@ Now we can specify our Bayesian multi-level model and priors. Note that as we ar
 
 ```{r eeg_prior_pred_check, cache=TRUE, echo=TRUE}
 m_prior <- brm(data = d_eeg, 
-  rms ~ wallpaper_group-1 + (1|subject),
+  rms ~ wg-1 + (1|subject),
   family = "lognormal", 
   prior = prior, 
   iter = n_iter ,
@@ -204,3 +205,64 @@ plt + plot_annotation(title = 'Prior Predictive Checks')
 We can see that i) our priors are relatively weak as the predictions span several orders of magnitide, and ii) our empirical data falls within this range. 
 
 
+## Compute Posterior 
+
+### Fit Model to EEG Data
+
+We will now fit the model to the data.
+
+```{r eeg_fit_model, cache=TRUE}
+m_eeg <- brm(data = d_eeg, 
+             rms ~ wg-1 + (1|subject),
+             family = "lognormal", 
+             prior = prior, iter = n_iter,
+             control = list(adapt_delta = 0.99))
+
+summary(m_eeg)
+```
+
+
+We will now have at what the model predicts for the average participant (i.e, ignoring the random intercepts). If anybody else would like to suggest over sensible ways to summarise this model, do let me know! I've been trying to use some of the functions from the `tidybayes` package, and they don't (yet?) have much on random effects. 
+
+
+```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+
+ # Extract samples from model
+my_samples$eeg <- get_model_samples(m_eeg)
+ 
+ # Tidy up a little
+ my_models$eeg <- get_model_predictions(my_samples$eeg)
+ 
+ # Plot
+plot_model_output(
+  my_models$eeg, d_eeg,
+  "Model Fits for the odd-harmonic data from occipital electrodes",
+  "orangered3", 
+  "log(rms)")
+```
+
+### Fit Model to Display Duration Threshold Data
+
+We will now fit the model to the data.
+
+```{r threshold_fit_model, cache=TRUE, echo=FALSE}
+m_threshold <- brm(data = d_dispthresh, 
+                   threshold ~ wg-1 + (1|subject),
+                   family = "lognormal", 
+                   prior = prior, iter = n_iter,
+                   control = list(adapt_delta = 0.99))
+
+summary(m_threshold)
+```
+
+```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+# Extract samples from model
+my_samples$threshold <- get_model_samples(m_threshold)
+
+# Tidy up a little
+my_models$threshold <- get_model_predictions(my_samples$threshold)
+
+# Plot
+plot_model_output(my_models$threshold, d_dispthresh, 
+                  "Model Fits: Display Duration Threshold", "orangered3", "threshold (ms)")
+```
