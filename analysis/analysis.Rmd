@@ -58,7 +58,9 @@ Here we import our data and make some sumamry plots.
 
 Importing the odd-harmonic EEG data from six electrodes region-of-interest over occipital cortex.
 
-\tiny
+![A caption](../figures/occTopo_merged.png)
+
+
 ```{r eeg_import}
 fl <- "rms_Occ_Odd.csv"
 
