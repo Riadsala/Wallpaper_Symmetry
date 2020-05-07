@@ -473,9 +473,52 @@ filter(df, p == 0.95)
 
 ## Index and Normality 
 
+Subgroup relations can be classified by their index, and wheter they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgrop relationships. 
+
+
+```{r}
+
+
+my_models <- list()
+my_models$full <- brm(data = comp_summary$eeg, mean_value ~ as.numeric(as.character(index))  + normal)
+
+summary(my_models$full)
+
+comp_summary$eeg %>% 
+  modelr::data_grid(index, normal) %>%
+  add_fitted_draws(my_models$full, n = 100) %>%
+  ggplot(aes(x =  as.numeric(as.character(index)), y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
+  geom_line(alpha = .2) +
+  geom_jitter(data = comp_summary$eeg, aes(x =  as.numeric(as.character(index)), y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
+  theme_minimal() + 
+  ggthemes::scale_colour_ptol() + scale_x_continuous(breaks = c(2,3,4,6,8,12)) +
+  theme(panel.grid.minor = element_blank())
+
+```
+
+```{r}
+
+
+my_models <- list()
+my_models$full <- brm(data = comp_summary$threshold, mean_value ~ as.numeric(as.character(index))  + normal)
+
+summary(my_models$full)
+
+comp_summary$threshold %>% 
+  modelr::data_grid(index, normal) %>%
+  add_fitted_draws(my_models$full, n = 100) %>%
+  ggplot(aes(x =  as.numeric(as.character(index)), y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
+  geom_line(alpha = .2) +
+  geom_jitter(data = comp_summary$threshold, aes(x =  as.numeric(as.character(index)), y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
+  theme_minimal() + 
+  ggthemes::scale_colour_ptol() + scale_x_continuous(breaks = c(2,3,4,6,8,12))+
+  theme(panel.grid.minor = element_blank())
+
+```
+
 ## Correlation Between EEG RMS and Display Duration Threshold
 
-Finally, we will investigate whether there is a correlation between the EEG rms measures and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and compare p(eeg difference >0 | data) correlates with p(display duration difference < 0 | data). 
+Finally, we will investigate whether there is a correlation between the EEG rms measures and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted . 
 
 ```{r compare_comparisons}
 
@@ -489,8 +532,7 @@ m <- brm(data = d, threshold ~ rms)
 bayes_R2(m)
 ```
 
-We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, $95\%$ credible interval is 0.026 - 0.302$). 
-
+We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, 95\% credible interval is 0.026 - 0.302). 
 
 ```{r fig.cap="Scatter plot showing the correlation between our two measures. Each line is a sample from the posterior of a Bayesian linear regression."}
 d %>% 
