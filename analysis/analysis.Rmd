@@ -266,3 +266,207 @@ my_models$threshold <- get_model_predictions(my_samples$threshold)
 plot_model_output(my_models$threshold, d_dispthresh, 
                   "Model Fits: Display Duration Threshold", "orangered3", "threshold (ms)")
 ```
+
+
+### EEG Control Data
+
+We will also fit models to the control data. As we can see from Figure 2.4, the group differences are much smaller. 
+
+
+```{r cache=TRUE, fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+
+m_eeg_par_odd <- brm(data = d_eeg_par_odd, 
+                     rms ~ wg-1 + (1|subject),
+                     family = "lognormal", 
+                     prior = prior, iter = n_iter,
+                     control = list(adapt_delta = 0.99))
+
+my_samples$par_odd <- get_model_samples(m_eeg_par_odd)
+my_models$par_odd <- get_model_predictions(my_samples$par_odd)
+plt1 <- plot_model_output(my_models$par_odd, d_eeg_par_odd, 
+                  "odd-harmonic data from \nparietal electrodes", "orangered3", "threshold (ms)")
+
+
+m_eeg_occ_even <- brm(data = d_eeg_occ_even, 
+                      rms ~ wg-1 + (1|subject),
+                      family = "lognormal", 
+                      prior = prior, iter = n_iter,
+                      control = list(adapt_delta = 0.99))
+
+# Extract samples from model
+my_samples$occ_even <- get_model_samples(m_eeg_occ_even)
+my_models$occ_even <- get_model_predictions(my_samples$occ_even)
+plt2 <- plot_model_output(my_models$occ_even, d_eeg_occ_even, 
+                  "even-harmonic data from \noccipital electrodes", "orangered3", "threshold (ms)")
+
+plt1 + plt2 + plot_annotation(title = 'Model Fits for the ')
+``` 
+
+# Subgroup Comparisons
+
+We will now compute the difference between sub- and super-groups. 
+  
+```{r subgroup_comparisons, cache=TRUE}
+source("scripts/get_subgroup_comparisons.R")
+
+subgroup_comp$eeg <- get_subgroup_comparisons(my_samples$eeg, 2*n_iter)
+subgroup_comp$threshold <- get_subgroup_comparisons(my_samples$threshold, 2*n_iter)
+subgroup_comp$occ_even <- get_subgroup_comparisons(my_samples$occ_even, 2*n_iter)
+subgroup_comp$par_odd  <- get_subgroup_comparisons(my_samples$par_odd,  2*n_iter)
+```
+
+
+## EEG RMS
+
+Finally, I calculate the probability that the difference between subgroup and supergroup is larger than zero (small than zero for the display duration) given the data. This information is then binned so we can colour in the posterior density plots.
+
+```{r define_comparison_summary_function}
+comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
+  # compute probabilties
+  subgroup_comp_dat %>%
+    group_by(key, index, normal) %>%
+    summarise(
+      mean_value = mean(value),
+      prob_one_tailed = if_else(greater == TRUE, mean(value > 0), mean(value < 0)))  %>%
+    mutate(
+      measurement = measurement_lab,
+      index_labs = as.numeric(as.factor(index)),
+      lab_cols = v_cols[index_labs],
+      prob_cat = cut(prob_one_tailed, c(0, 0.5, 0.75, 0.9, 0.99, 1))) -> comp_summary_dat
+  
+  return(comp_summary_dat)
+}
+```
+
+Now we will use it!
+  
+```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
+# compute probabilties
+comp_summary$eeg <- comparison_summary(subgroup_comp$eeg, TRUE, 'rms')
+
+subgroup_comp$eeg <- full_join(
+  subgroup_comp$eeg, 
+  comp_summary$eeg, 
+  by = c("key", "index", "normal"))
+
+# Finally, plot everything:
+p1 <- plot_comparisons(
+  filter(subgroup_comp$eeg, index == 2),
+  filter(comp_summary$eeg, index == 2), 
+  1)
+
+p2 <-plot_comparisons(
+  filter(subgroup_comp$eeg, index != 2),
+  filter(comp_summary$eeg, index != 2), 
+  2)
+
+both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
+both_plts
+```
+
+## Display Duration Threshold
+
+We can do the same for the display duration thresholds. 
+
+```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero."}
+
+# compute probabilties
+comp_summary$threshold <- comparison_summary(subgroup_comp$threshold, FALSE, 'threshold')
+
+subgroup_comp$threshold <- full_join(
+  subgroup_comp$threshold, 
+  comp_summary$threshold, 
+  by = c("key", "index", "normal"))
+
+# Finally, plot everything:
+p1 <- plot_comparisons(
+  filter(subgroup_comp$threshold, index == 2),
+  filter(comp_summary$threshold, index == 2), 
+  1, TRUE)
+p2 <- plot_comparisons(
+  filter(subgroup_comp$threshold, index != 2),
+  filter(comp_summary$threshold, index != 2), 
+  2, TRUE)
+
+both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
+both_plts
+```
+
+## Control Data
+
+We will now do exactly the same with the control data...
+
+```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
+
+# compute probabilties
+comp_summary$occ_even <- comparison_summary(subgroup_comp$occ_even, TRUE, 'rms') 
+
+subgroup_comp$occ_even <- full_join(
+  subgroup_comp$occ_even, 
+  comp_summary$occ_even, 
+  by = c("key", "index", "normal"))
+
+p1 <- plot_comparisons(
+  filter(subgroup_comp$occ_even, index == 2),
+  filter(comp_summary$occ_even, index == 2), 
+  1)
+p2 <- plot_comparisons(
+  filter(subgroup_comp$occ_even, index != 2),
+  filter(comp_summary$occ_even, index != 2), 
+  2)
+
+both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv") 
+both_plts
+
+  
+# compute probabilties
+comp_summary$par_odd <- comparison_summary(subgroup_comp$par_odd, TRUE, 'rms') 
+
+subgroup_comp$par_odd <- full_join(
+  subgroup_comp$par_odd, 
+  comp_summary$par_odd, 
+  by = c("key", "index", "normal"))
+
+p1 <- plot_comparisons(
+  filter(subgroup_comp$par_odd, index == 2),
+  filter(comp_summary$par_odd, index == 2), 
+  1)
+p2 <- plot_comparisons(
+  filter(subgroup_comp$par_odd, index != 2),
+  filter(comp_summary$par_odd, index != 2), 
+  2)
+
+both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
+both_plts
+```
+
+
+## Summary
+
+We can summarise the subgroup comparison plots above by plotting ROC curves for each of our four measurements (Figure 3.5).
+
+```{r, fig.cap="This figure shows how many of our 64 comparisons are classed as having a greater-than-zero difference (less-than-zero for the display durations) for difference thresholds. between 0.5 an 1.0."}
+
+count_comparisons <- function(comparisons, p) {
+  x <- sum(comparisons$prob_one_tailed >= p)
+  return(x)
+}
+
+df <- tibble()
+
+for (p in seq(0.5, 0.99, 0.01)) {
+
+  df <- bind_rows(df, map_dbl(comp_summary,  count_comparisons, p))
+}
+
+df$p <- seq(0.5, 0.99, 0.01)
+
+df %>% gather("measurement", "number", -p) %>%
+  mutate(proportion = number/64) %>%
+  ggplot(aes(x = p, y = proportion, colour = measurement)) + geom_point() + geom_path() +
+  theme_minimal() + ggthemes::scale_color_ptol() +
+  xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
+
+filter(df, p == 0.95)
+
+```
