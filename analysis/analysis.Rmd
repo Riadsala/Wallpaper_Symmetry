@@ -440,7 +440,6 @@ both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
 both_plts
 ```
 
-
 ## Summary
 
 We can summarise the subgroup comparison plots above by plotting ROC curves for each of our four measurements (Figure 3.5).
@@ -468,5 +467,39 @@ df %>% gather("measurement", "number", -p) %>%
   xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
 
 filter(df, p == 0.95)
+```
+
+# Additional Analysis
+
+## Index and Normality 
+
+## Correlation Between EEG RMS and Display Duration Threshold
+
+Finally, we will investigate whether there is a correlation between the EEG rms measures and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and compare p(eeg difference >0 | data) correlates with p(display duration difference < 0 | data). 
+
+```{r compare_comparisons}
+
+bind_rows(
+  select(comp_summary$eeg, measurement, key, mean_value),
+  select(comp_summary$threshold, measurement, key, mean_value)) %>%
+  spread(measurement, mean_value) -> d
+
+m <- brm(data = d, threshold ~ rms)
+
+bayes_R2(m)
+```
+
+We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, $95\%$ credible interval is 0.026 - 0.302$). 
+
+
+```{r fig.cap="Scatter plot showing the correlation between our two measures. Each line is a sample from the posterior of a Bayesian linear regression."}
+d %>% 
+  modelr::data_grid(rms = seq(-0.2, 0.8, 0.1)) %>%
+  add_fitted_draws(m, n = 100) %>%
+  ggplot(aes(x = rms, y = threshold, color = index)) +
+  geom_line(aes(y = .value, group = .draw), alpha = .1, colour = "thistle4") +
+  geom_point(data = d) +
+  theme_minimal() + 
+  ggthemes::scale_colour_ptol()
 
 ```
