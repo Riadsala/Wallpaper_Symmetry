@@ -475,9 +475,7 @@ filter(df, p == 0.95)
 
 Subgroup relations can be classified by their index, and wheter they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgrop relationships. 
 
-
 ```{r}
-
 
 my_models <- list()
 my_models$full <- brm(data = comp_summary$eeg, mean_value ~ as.numeric(as.character(index))  + normal)
@@ -493,12 +491,9 @@ comp_summary$eeg %>%
   theme_minimal() + 
   ggthemes::scale_colour_ptol() + scale_x_continuous(breaks = c(2,3,4,6,8,12)) +
   theme(panel.grid.minor = element_blank())
-
 ```
 
 ```{r}
-
-
 my_models <- list()
 my_models$full <- brm(data = comp_summary$threshold, mean_value ~ as.numeric(as.character(index))  + normal)
 
@@ -513,7 +508,6 @@ comp_summary$threshold %>%
   theme_minimal() + 
   ggthemes::scale_colour_ptol() + scale_x_continuous(breaks = c(2,3,4,6,8,12))+
   theme(panel.grid.minor = element_blank())
-
 ```
 
 ## Correlation Between EEG RMS and Display Duration Threshold
@@ -521,7 +515,6 @@ comp_summary$threshold %>%
 Finally, we will investigate whether there is a correlation between the EEG rms measures and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted . 
 
 ```{r compare_comparisons}
-
 bind_rows(
   select(comp_summary$eeg, measurement, key, mean_value),
   select(comp_summary$threshold, measurement, key, mean_value)) %>%
@@ -543,5 +536,4 @@ d %>%
   geom_point(data = d) +
   theme_minimal() + 
   ggthemes::scale_colour_ptol()
-
 ```
