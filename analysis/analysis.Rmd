@@ -1,6 +1,6 @@
 ---
 title: "Supplementary Materials"
-author: "Peter J. Kohler, Oda Åsgard, and Alasdair D. F. Clarke"
+author: "Peter J. Kohler and Alasdair D. F. Clarke"
 date:
 output: bookdown::html_document2
 ---
@@ -52,13 +52,13 @@ subgroup_comp <- list()
 
 ## Import Data
 
-Here we import our data and make some sumamry plots.
+Here we import our data and make some summary plots.
 
 ### EEG Data
 
-Importing the odd-harmonic EEG data from six electrodes region-of-interest over occipital cortex.
+Importing the primary EEG data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
 
-![A caption](../figures/occTopo_merged.png)
+![RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced.](../figures/occTopo_merged.png)
 
 
 ```{r eeg_import}
@@ -120,7 +120,7 @@ Again, we have a skewed distribution, so will fit with `family = 'lognormal'`.
 ### Control Data
 
 In addition to the primary EEG data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data 
-from six parietal electrodes (see main paper).
+from six parietal electrodes (see Figure 1.1 and the main paper).
 
 ```{r import_control}
 
@@ -243,7 +243,7 @@ plot_model_output(
   "log(rms)")
 ```
 
-### Fit Model to Display Duration Threshold Data
+### Fit Model to Psychophysical Data
 
 We will now fit the model to the data.
 
@@ -266,7 +266,7 @@ my_models$threshold <- get_model_predictions(my_samples$threshold)
 
 # Plot
 plot_model_output(my_models$threshold, d_dispthresh, 
-                  "Model Fits: Display Duration Threshold", "orangered3", "threshold (ms)")
+                  "Model Fits: Psychophysical Data", "orangered3", "threshold (ms)")
 ```
 
 
@@ -318,9 +318,9 @@ subgroup_comp$par_odd  <- get_subgroup_comparisons(my_samples$par_odd,  2*n_iter
 ```
 
 
-## EEG RMS
+## Primary EEG Data
 
-Finally, I calculate the probability that the difference between subgroup and supergroup is larger than zero (small than zero for the display duration) given the data. This information is then binned so we can colour in the posterior density plots.
+Finally, we calculate the probability that the RMS difference between subgroup and supergroup is larger than zero given the data. This information is then binned so we can colour in the posterior density plots.
 
 ```{r define_comparison_summary_function}
 comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
@@ -366,9 +366,9 @@ both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
 both_plts
 ```
 
-## Display Duration Threshold
+## Psychophysical Data
 
-We can do the same for the display duration thresholds. 
+We can do the same for the display duration thresholds from our psychophysics experiment. Here we are looking for the opposite effect, namely that display larger are larger for subgroups than for supergroups (see main paper), so we calculate the probability that differences in duration are smaller than zero. 
 
 ```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero."}
 
@@ -394,9 +394,9 @@ both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
 both_plts
 ```
 
-## Control Data
+## Control EEG Data
 
-We will now do exactly the same with the control data...
+We will now do exactly the same with the control data (odd harmonic data from parietal electrodes and even harmonic data from occipital electrodes)
 
 ```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
 
@@ -475,7 +475,7 @@ filter(df, p == 0.95)
 
 ## Index and Normality 
 
-Subgroup relations can be classified by their index, and wheter they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgrop relationships. 
+Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
 
 ```{r}
 
@@ -512,9 +512,9 @@ comp_summary$threshold %>%
   theme(panel.grid.minor = element_blank())
 ```
 
-## Correlation Between EEG RMS and Display Duration Threshold
+## Correlation Between Primary EEG data and Psychophysical Thresholds
 
-Finally, we will investigate whether there is a correlation between the EEG rms measures and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted . 
+Finally, we will investigate whether there is a correlation between the our primary EEG measure (rms amplitude of odd harmonics over occipital cortex) and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted values of the two measures. 
 
 ```{r compare_comparisons}
 bind_rows(
