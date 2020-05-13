@@ -59,14 +59,12 @@ Here we import our data and make some summary plots.
 
 Importing the primary EEG data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
 
-
 ```{r, fig.cap = "RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
 plt <- cowplot::ggdraw() +
   cowplot::draw_image("../figures/occTopo_merged.png")
 print(plt)
 
 ```
-at
 
 ```{r eeg_import}
 fl <- "rms_Occ_Odd.csv"
@@ -126,8 +124,7 @@ Again, we have a skewed distribution, so will fit with `family = 'lognormal'`.
 
 ### Control Data
 
-In addition to the primary EEG data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data 
-from six parietal electrodes (see Figure 1.1 and the main paper).
+In addition to the primary EEG data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
 
 ```{r import_control}
 
@@ -228,26 +225,43 @@ m_eeg <- brm(data = d_eeg,
              control = list(adapt_delta = 0.99))
 
 summary(m_eeg)
+
+# Also fit to display duration data so I can display both models together
+
+m_threshold <- brm(data = d_dispthresh, 
+                   threshold ~ wg-1 + (1|subject),
+                   family = "lognormal", 
+                   prior = prior, iter = n_iter,
+                   control = list(adapt_delta = 0.99))
 ```
 
-
-We will now have at what the model predicts for the average participant (i.e, ignoring the random intercepts). If anybody else would like to suggest over sensible ways to summarise this model, do let me know! I've been trying to use some of the functions from the `tidybayes` package, and they don't (yet?) have much on random effects. 
-
+We will now look at the model's predicts for the average participant (i.e, ignoring the random intercepts). 
 
 ```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
 
  # Extract samples from model
 my_samples$eeg <- get_model_samples(m_eeg)
+my_samples$threshold <- get_model_samples(m_threshold)
  
  # Tidy up a little
  my_models$eeg <- get_model_predictions(my_samples$eeg)
+ my_models$threshold <- get_model_predictions(my_samples$threshold)
  
  # Plot
-plot_model_output(
+plt1 <- plot_model_output(
   my_models$eeg, d_eeg,
-  "Model Fits for the odd-harmonic data from occipital electrodes",
+  "odd-harmonic data from \noccipital electrodes",
   "orangered3", 
   "log(rms)")
+
+plt2 <- plot_model_output(
+  my_models$threshold, d_dispthresh, 
+  "Psychophysical Data", 
+  "orangered3", 
+  "threshold (ms)")
+
+plt1 + plt2 + plot_annotation(title = 'Model Fits:')
+
 ```
 
 ### Fit Model to Psychophysical Data
@@ -255,34 +269,14 @@ plot_model_output(
 We will now fit the model to the data.
 
 ```{r threshold_fit_model, cache=TRUE, echo=FALSE}
-m_threshold <- brm(data = d_dispthresh, 
-                   threshold ~ wg-1 + (1|subject),
-                   family = "lognormal", 
-                   prior = prior, iter = n_iter,
-                   control = list(adapt_delta = 0.99))
-
 summary(m_threshold)
 ```
-
-```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
-# Extract samples from model
-my_samples$threshold <- get_model_samples(m_threshold)
-
-# Tidy up a little
-my_models$threshold <- get_model_predictions(my_samples$threshold)
-
-# Plot
-plot_model_output(my_models$threshold, d_dispthresh, 
-                  "Model Fits: Psychophysical Data", "orangered3", "threshold (ms)")
-```
-
 
 ### EEG Control Data
 
 We will also fit models to the control data. As we can see from Figure 2.4, the group differences are much smaller. 
 
-
-```{r cache=TRUE, fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+```{r fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
 
 m_eeg_par_odd <- brm(data = d_eeg_par_odd, 
                      rms ~ wg-1 + (1|subject),
@@ -323,7 +317,6 @@ subgroup_comp$threshold <- get_subgroup_comparisons(my_samples$threshold, 2*n_it
 subgroup_comp$occ_even <- get_subgroup_comparisons(my_samples$occ_even, 2*n_iter)
 subgroup_comp$par_odd  <- get_subgroup_comparisons(my_samples$par_odd,  2*n_iter)
 ```
-
 
 ## Primary EEG Data
 
@@ -392,6 +385,7 @@ p1 <- plot_comparisons(
   filter(subgroup_comp$threshold, index == 2),
   filter(comp_summary$threshold, index == 2), 
   1, TRUE)
+
 p2 <- plot_comparisons(
   filter(subgroup_comp$threshold, index != 2),
   filter(comp_summary$threshold, index != 2), 
@@ -425,9 +419,8 @@ p2 <- plot_comparisons(
   2)
 
 both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv") 
-both_plts
+both_plts + plot_annotation(title = 'Odd harmonic data from parietal electrodes')
 
-  
 # compute probabilties
 comp_summary$par_odd <- comparison_summary(subgroup_comp$par_odd, TRUE, 'rms') 
 
@@ -446,7 +439,7 @@ p2 <- plot_comparisons(
   2)
 
 both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
-both_plts
+both_plts + plot_annotation(title = 'Even harmonic data from occipital electrodes')
 ```
 
 ## Summary
@@ -472,11 +465,11 @@ df$p <- seq(0.5, 0.99, 0.01)
 df %>% gather("measurement", "number", -p) %>%
   mutate(proportion = number/64) %>%
   ggplot(aes(x = p, y = proportion, colour = measurement)) + geom_point() + geom_path() +
-  theme_minimal() + ggthemes::scale_color_ptol() +
+  theme_minimal() + ggthemes::scale_color_ptol(labels = c("primary EEG", "sensor control EEG", "harmonic control EEG", "psychophysical threshold")) +
   xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
-
-filter(df, p == 0.95)
 ```
+
+If we take p=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/64 = 87.5% and 49/64 = 76.6% of the comparisons for the primary EEG and display durations repectively. This compares to the $32/64= 50.0% and 22/64 = 34.4% for the control EEG conditions. 
 
 # Additional Analysis
 
@@ -485,39 +478,46 @@ filter(df, p == 0.95)
 Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
 
 ```{r}
-
 my_models <- list()
-my_models$full <- brm(data = comp_summary$eeg, mean_value ~ as.numeric(as.character(index))  + normal)
+comp_summary$eeg$index <- as.numeric(as.character(comp_summary$eeg$index))
+comp_summary$threshold$index <- as.numeric(as.character(comp_summary$threshold$index))
 
-summary(my_models$full)
-
-comp_summary$eeg %>% 
-  modelr::data_grid(index, normal) %>%
-  add_fitted_draws(my_models$full, n = 100) %>%
-  ggplot(aes(x =  as.numeric(as.character(index)), y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
-  geom_line(alpha = .2) +
-  geom_jitter(data = comp_summary$eeg, aes(x =  as.numeric(as.character(index)), y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
-  theme_minimal() + 
-  ggthemes::scale_colour_ptol() + scale_x_continuous(breaks = c(2,3,4,6,8,12)) +
-  theme(panel.grid.minor = element_blank())
+my_models$eeg <- brm(data = comp_summary$eeg, mean_value ~ index * normal)
+my_models$disp <- brm(data = comp_summary$threshold, mean_value ~ index * normal)
+summary(my_models$eeg)
+summary(my_models$disp)
 ```
 
-```{r}
-my_models <- list()
-my_models$full <- brm(data = comp_summary$threshold, mean_value ~ as.numeric(as.character(index))  + normal)
+We can see that the index of the subgroup relationship has an effect on both the difference in log(rms) and the difference in log(display duration): relationships with a higher index lead to larger differences. 
 
-summary(my_models$full)
+```{r, fig.cap = "The effect of index and normality on log(rms) and log(ms)."}
+comp_summary$eeg %>% 
+  modelr::data_grid(index, normal) %>%
+  add_fitted_draws(my_models$eeg, n = 100) %>%
+  mutate(model = "primary eeg") -> d_plt_eeg
 
 comp_summary$threshold %>% 
   modelr::data_grid(index, normal) %>%
-  add_fitted_draws(my_models$full, n = 100) %>%
-  ggplot(aes(x =  as.numeric(as.character(index)), y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
-  geom_line(alpha = .2) +
-  geom_jitter(data = comp_summary$threshold, aes(x =  as.numeric(as.character(index)), y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
+  add_fitted_draws(my_models$disp, n = 100) %>%
+  mutate(model = "psychophysical threshold") -> d_plt_disp
+
+d_summary <- bind_rows(comp_summary$threshold %>% mutate(model = "psychophysical threshold"),
+                       comp_summary$eeg %>% mutate(model = "primary eeg"))
+
+bind_rows(d_plt_eeg, d_plt_disp) %>%
+  ggplot(aes(x =  index, y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
+  geom_line(alpha = .15) +
+  facet_wrap(~ model, scales="free_y") + 
+  geom_jitter(
+    data = d_summary, 
+    aes(x =  index, y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
   theme_minimal() + 
-  ggthemes::scale_colour_ptol() + scale_x_continuous(breaks = c(2,3,4,6,8,12))+
-  theme(panel.grid.minor = element_blank())
+  ggthemes::scale_colour_ptol(labels = c("non-normal", "normal")) + 
+  scale_x_continuous("index", breaks = c(2,3,4,6,8,12)) +
+  scale_y_continuous("value") +
+  theme(panel.grid.minor = element_blank(), legend.title = element_blank()) 
 ```
+
 
 ## Correlation Between Primary EEG data and Psychophysical Thresholds
 
@@ -540,9 +540,9 @@ We can see that although the correlation is relatively weak, our confidence inte
 d %>% 
   modelr::data_grid(rms = seq(-0.2, 0.8, 0.1)) %>%
   add_fitted_draws(m, n = 100) %>%
-  ggplot(aes(x = rms, y = threshold, color = index)) +
+  ggplot(aes(x = rms, y = threshold, color = as.factor(index))) +
   geom_line(aes(y = .value, group = .draw), alpha = .1, colour = "thistle4") +
   geom_point(data = d) +
   theme_minimal() + 
-  ggthemes::scale_colour_ptol()
+  ggthemes::scale_colour_ptol("index")
 ```
