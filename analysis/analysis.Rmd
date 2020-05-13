@@ -18,6 +18,7 @@ library(latex2exp)
 library(see)
 library(ggthemes)
 library(patchwork)
+library(magick)
 
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, fig.align='center')
 
@@ -38,8 +39,8 @@ Details of packages, etc, are given below.
 sessionInfo()
 ```
 
-Use multiple cores and set number of iterations. 
 ```{r}
+# Use multiple cores and set number of iterations. 
 options(mc.cores = parallel::detectCores())
 n_iter <- 10000
 
@@ -58,8 +59,14 @@ Here we import our data and make some summary plots.
 
 Importing the primary EEG data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
 
-![RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced.](../figures/occTopo_merged.png)
 
+```{r, fig.cap = "RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
+plt <- cowplot::ggdraw() +
+  cowplot::draw_image("../figures/occTopo_merged.png")
+print(plt)
+
+```
+at
 
 ```{r eeg_import}
 fl <- "rms_Occ_Odd.csv"
