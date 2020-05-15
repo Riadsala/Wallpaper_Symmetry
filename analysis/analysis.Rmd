@@ -143,6 +143,22 @@ read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
 rm(my_cols, fl)
 ```
 
+## Subgroup Information
+
+Import subgroup information and display a table of the relationships that we will be investigating. 
+
+```{r}
+source("scripts/import_subgroup_comparisons.R")
+
+glimpse(subgroups)
+opts <- options(knitr.kable.NA = "")
+knitr::kable(index_table, caption = "subgroup index")
+```
+
+```{r}
+knitr::kable(normal_table, caption = "normal and non-normal subgroups")
+```
+
 # Bayesian Analysis 
 
 Here are the details of the Bayesian multi-level modelling. Our general approach is:
@@ -190,7 +206,7 @@ m_prior <- brm(data = d_eeg,
 
 We can use this model to generate data.
 
-```{r, fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+```{r, fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals.", cache=TRUE}
 prior_samples <- get_model_samples(m_prior) 
 
 # Tidy up a little
@@ -276,7 +292,7 @@ summary(m_threshold)
 
 We will also fit models to the control data. As we can see from Figure 2.4, the group differences are much smaller. 
 
-```{r fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+```{r fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals.", cache=TRUE}
 
 m_eeg_par_odd <- brm(data = d_eeg_par_odd, 
                      rms ~ wg-1 + (1|subject),
@@ -477,7 +493,7 @@ If we take p=0.95 as our cut-off, we can see that the subgroup relations are pre
 
 Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
 
-```{r}
+```{r, cache=TRUE}
 my_models <- list()
 comp_summary$eeg$index <- as.numeric(as.character(comp_summary$eeg$index))
 comp_summary$threshold$index <- as.numeric(as.character(comp_summary$threshold$index))
@@ -523,7 +539,7 @@ bind_rows(d_plt_eeg, d_plt_disp) %>%
 
 Finally, we will investigate whether there is a correlation between the our primary EEG measure (rms amplitude of odd harmonics over occipital cortex) and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted values of the two measures. 
 
-```{r compare_comparisons}
+```{r compare_comparisons, cache=TRUE}
 bind_rows(
   select(comp_summary$eeg, measurement, key, mean_value),
   select(comp_summary$threshold, measurement, key, mean_value)) %>%
