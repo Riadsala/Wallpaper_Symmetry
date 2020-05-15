@@ -82,7 +82,7 @@ read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
   glimpse() -> d_eeg 
 ```
  
-It's clearly skewed, and negative display duration are impossible, so will fit a `glm` with `family = 'lognormal`.
+It's clearly skewed, and negative display duration are impossible, so will fit a `glm` with `family = 'lognormal'`.
 
 ```{r cache=TRUE, fig.cap = "Data are the root-mean-squaured (rms) over the odd-harmonic filtered waveforms."}
 d_eeg %>% ggplot(aes(x = rms)) + 
