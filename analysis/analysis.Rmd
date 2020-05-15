@@ -226,7 +226,6 @@ plt + plot_annotation(title = 'Prior Predictive Checks')
 
 We can see that i) our priors are relatively weak as the predictions span several orders of magnitide, and ii) our empirical data falls within this range. 
 
-
 ## Compute Posterior 
 
 ### Fit Model to EEG Data
@@ -487,7 +486,31 @@ df %>% gather("measurement", "number", -p) %>%
 
 If we take p=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/64 = 87.5% and 49/64 = 76.6% of the comparisons for the primary EEG and display durations repectively. This compares to the $32/64= 50.0% and 22/64 = 34.4% for the control EEG conditions. 
 
+
+
+
 # Additional Analysis
+
+## Replicatation of Kohler et al (2016)
+
+We can lok at the groups that only contain orientation, and see if we obtain the parametric response as documented in Kohler et al. (2016). We one might predict based on those results, we get a corresponding pattern of display duration thresholds, with the time taken to detect the symmetry dreasing as we increase the amount of rotational symmetry.
+
+Curiosuly, we do not have a large difference betwee P4 and P6 in the eeg data. 
+
+```{r, fig.cap = "The effect of increasing the amount of rotational symmetry.", fig.height=3}
+my_samples$eeg %>% select(P2, P3, P4, P6) %>%
+  pivot_longer(names_to = "wallpaper group", cols = c(P2, P3, P4, P6)) %>% 
+  mutate(exp = "eeg") %>%
+  bind_rows(
+    my_samples$threshold %>% select(P2, P3, P4, P6) %>% 
+      pivot_longer(names_to = "wallpaper group", cols = c(P2, P3, P4, P6)) %>%
+      mutate(exp = "display thresholds")) %>% 
+  ggplot() + aes(x = value, fill = `wallpaper group`) + 
+    geom_density(alpha = 0.35) + 
+    facet_wrap(~ exp, scale = "free_y") + 
+  theme_minimal() + 
+  scale_fill_viridis_d()
+```
 
 ## Index and Normality 
 
