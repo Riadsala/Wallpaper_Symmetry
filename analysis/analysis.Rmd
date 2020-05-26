@@ -324,13 +324,13 @@ plt1 + plt2 + plot_annotation(title = 'Model Fits for the ')
 
 We will now compute the difference between sub- and super-groups. 
   
-```{r subgroup_comparisons, cache=TRUE}
+```{r subgroup_comparisons}
 source("scripts/get_subgroup_comparisons.R")
 
-subgroup_comp$eeg <- get_subgroup_comparisons(my_samples$eeg, 2*n_iter)
-subgroup_comp$threshold <- get_subgroup_comparisons(my_samples$threshold, 2*n_iter)
-subgroup_comp$occ_even <- get_subgroup_comparisons(my_samples$occ_even, 2*n_iter)
-subgroup_comp$par_odd  <- get_subgroup_comparisons(my_samples$par_odd,  2*n_iter)
+subgroup_comp$eeg <- get_subgroup_comparisons2(my_samples$eeg)
+subgroup_comp$threshold <- get_subgroup_comparisons2(my_samples$threshold,)
+subgroup_comp$occ_even <- get_subgroup_comparisons2(my_samples$occ_even)
+subgroup_comp$par_odd  <- get_subgroup_comparisons2(my_samples$par_odd)
 ```
 
 ## Primary EEG Data

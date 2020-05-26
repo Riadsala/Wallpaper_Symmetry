@@ -1,3 +1,20 @@
+get_subgroup_comparisons2 <- function(m_samples, n_iter) {
+  
+  subgroup_comp <- tibble(key = as.character(), value = as.numeric())
+  
+  for (ii in 1:nrow(subgroups)) {
+   subgroup_comp <- bind_rows(
+     subgroup_comp,
+     tibble(
+       key = subgroups$label[ii],
+       index = subgroups$index[ii],
+       normal = subgroups$normal[ii],
+       value = (m_samples[subgroups$subgroup[ii]] - m_samples[subgroups$group[ii]])[[1]]))
+  }
+  
+  return(subgroup_comp)
+}
+
 get_subgroup_comparisons <- function(m_samples, n_iter)
 {
     m_samples %>%
