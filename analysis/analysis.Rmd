@@ -477,10 +477,13 @@ for (p in seq(0.5, 0.99, 0.01)) {
 
 df$p <- seq(0.5, 0.99, 0.01)
 
+filter(df, p == 0.95)
+
 df %>% gather("measurement", "number", -p) %>%
-  mutate(proportion = number/64) %>%
+  mutate(proportion = number/nrow(subgroups)) %>%
   ggplot(aes(x = p, y = proportion, colour = measurement)) + geom_point() + geom_path() +
   theme_minimal() + ggthemes::scale_color_ptol(labels = c("primary EEG", "sensor control EEG", "harmonic control EEG", "psychophysical threshold")) +
+  scale_y_continuous(limits = c(0, 1)) +
   xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
 ```
 

@@ -12,6 +12,8 @@ get_subgroup_comparisons2 <- function(m_samples, n_iter) {
        value = (m_samples[subgroups$subgroup[ii]] - m_samples[subgroups$group[ii]])[[1]]))
   }
   
+  subgroup_comp$index <- as.factor(subgroup_comp$index)
+  
   return(subgroup_comp)
 }
 
