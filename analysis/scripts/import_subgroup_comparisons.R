@@ -31,25 +31,30 @@ for (ii in 1:nrow(index_dat)) {
     }
 } 
 
+
+# list of comparisons to remove
+to_remove <- list(
+    "PM-CM", "CM-PM",
+    "PMM-CMM", "CMM-PMM",
+    "P3M1-P31M", "P31M-P3M1")
+
 subgroups %>% 
     mutate(
-        normal_colour = as.numeric(normal),
-        normal_colour = if_else(is.na(normal_colour), 0, normal_colour),
-        normal_colour = if_else(normal_colour== 1, 1, 0),
+        colour_code = as.numeric(normal)+1,
+        colour_code = if_else(group == subgroup, 3, colour_code),
+        colour_code = if_else(paste(group, subgroup, sep="-") %in% to_remove, 4, colour_code), 
         index = kableExtra::cell_spec(
             index, 
-            color = kableExtra::spec_color(as.numeric(normal), end = 0.7, na_color = "#FFFFFF",  option = "magma")),
+            color = kableExtra::spec_color(colour_code, end = 0.7, na_color = "#FFFFFF",  option = "magma")),
         ) %>%
     select(group, subgroup, index) %>% 
     pivot_wider(names_from = group, values_from = index) -> index_table
 
-subgroups %>% 
-    select(group, subgroup, normal) %>% 
-    pivot_wider(names_from = group, values_from = normal) -> normal_table
 
 # filter by index to remove all non-valid relations
 # also remove all indentity relationships
 subgroups %>% filter(
     is.finite(index),
-    group != subgroup) %>%
+    group != subgroup,
+    !(paste(group, subgroup, sep="-") %in% to_remove)) %>%
     mutate(label = paste(group, "$\\rightarrow$", subgroup)) -> subgroups
