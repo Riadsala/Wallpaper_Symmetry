@@ -8,7 +8,6 @@ output: bookdown::html_document2
 I have set `echo=FALSE` so that most of the code chunks will not display. Please refer to the .Rmd file for source code.
 
 ```{r setup, include=FALSE}
-
 library(bookdown)
 library(tidyverse)
 library(brms)
@@ -27,6 +26,8 @@ v_cols <- ggthemes::ptol_pal()(6)
 
 # read in some helper functions that will be used later
 source("scripts/helper_functions.R")
+
+options(mc.cores = parallel::detectCores())
 ```
 
 # Loading packages and importing data
@@ -346,6 +347,7 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
       mean_value = mean(value),
       prob_one_tailed = if_else(greater == TRUE, mean(value > 0), mean(value < 0)))  %>%
     mutate(
+      prob_one_tailed = if_else(prob_one_tailed==0, 0.01, prob_one_tailed),
       measurement = measurement_lab,
       index_labs = as.numeric(as.factor(index)),
       lab_cols = v_cols[index_labs],

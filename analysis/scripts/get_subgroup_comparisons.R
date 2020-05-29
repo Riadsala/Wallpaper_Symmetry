@@ -206,10 +206,10 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
             plot.margin=unit(c(1,1,1.5,1.2),"cm"))  
        
      if (is_thresholds) {
-        plt <- plt + coord_cartesian((xlim = c(-1.5, 0.4))) + 
+        plt <- plt + coord_cartesian((xlim = c(-2.2, 0.7))) + 
             scale_fill_viridis_d("p(difference < 0 | data)", option = "plasma", drop = FALSE)  
     } else {
-         plt <- plt + coord_cartesian((xlim = c(-0.4, 1))) + 
+         plt <- plt + coord_cartesian((xlim = c(-0.5, 1.5))) + 
             scale_fill_viridis_d("p(difference > 0 | data)", option = "plasma", drop = FALSE) 
     }
 
