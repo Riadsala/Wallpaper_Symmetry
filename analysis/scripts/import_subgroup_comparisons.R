@@ -45,7 +45,7 @@ subgroups %>%
         colour_code = if_else(paste(group, subgroup, sep="-") %in% to_remove, 4, colour_code), 
         index = kableExtra::cell_spec(
             index, 
-            color = kableExtra::spec_color(colour_code, end = 0.7, na_color = "#FFFFFF",  option = "magma")),
+            color = kableExtra::spec_color(colour_code, end = 0.9, na_color = "#FFFFFF")),
         ) %>%
     select(group, subgroup, index) %>% 
     pivot_wider(names_from = group, values_from = index) -> index_table
