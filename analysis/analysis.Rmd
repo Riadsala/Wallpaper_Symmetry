@@ -144,8 +144,9 @@ read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
 rm(my_cols, fl)
 ```
 
-## Subgroup Information
+## Symmetry Information
 
+### Subgroup Relationships
 Import subgroup information and display a table of the relationships that we will be investigating. 
 
 ```{r}
@@ -159,6 +160,25 @@ opts <- options(knitr.kable.NA = "")
 
 knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExtra::kable_styling(full_width = F)
 ```
+
+### Types of Symmetry
+
+
+```{r, fig.cap = "Symmetries present in each group"}
+sym_dat <- read_csv("../subgroups/symmeries_in_group.csv") %>%
+  mutate(group = str_to_upper(group))
+
+sym_dat %>% pivot_longer(-group, names_to = "symmetry", values_to = "order") %>%
+  ggplot(aes(x = symmetry, y = order, fill = as.factor(order))) + geom_col() + facet_wrap(~ group) +
+  theme_bw() + 
+  scale_y_continuous(breaks = c(2,4,6)) + 
+  ggthemes::scale_fill_ptol() + 
+  theme(
+    panel.grid.minor=element_blank(), 
+    legend.position = "none")
+
+```
+
 
 
 # Bayesian Analysis 
