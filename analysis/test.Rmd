@@ -1,0 +1,162 @@
+---
+title: "Supplementary Materials"
+author: "Peter J. Kohler and Alasdair D. F. Clarke"
+date:
+output: bookdown::html_document2
+---
+
+I have set `echo=FALSE` so that most of the code chunks will not display. Please refer to the .Rmd file for source code.
+
+```{r setup, include=FALSE}
+library(bookdown)
+library(tidyverse)
+library(brms)
+library(tidybayes)
+library(ggridges)
+library(latex2exp)
+library(see)
+library(ggthemes)
+library(patchwork)
+library(magick)
+
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, fig.align='center')
+
+# specify some colours to use in the plots
+v_cols <- ggthemes::ptol_pal()(6)
+
+# read in some helper functions that will be used later
+source("scripts/helper_functions.R")
+
+options(mc.cores = parallel::detectCores())
+```
+
+# Loading packages and importing data
+
+##  Packages
+
+Details of packages, etc, are given below.
+
+```{r}
+sessionInfo()
+```
+
+```{r}
+# Use multiple cores and set number of iterations. 
+options(mc.cores = parallel::detectCores())
+n_iter <- 10000
+
+# make empty lists to store things in
+my_models <- list()
+my_samples <- list()
+comp_summary <- list()
+subgroup_comp <- list()
+```
+
+## Import Data
+
+Here we import our data and make some summary plots.
+
+### EEG Data
+
+Importing the primary EEG data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
+
+```{r, fig.cap = "RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
+plt <- cowplot::ggdraw() +
+  cowplot::draw_image("../figures/occTopo_merged.png")
+print(plt)
+
+```
+
+```{r eeg_import}
+fl <- "rms_Occ_Odd.csv"
+
+# set column types
+my_cols <- cols(
+  .default = col_double(),
+  Row = col_character()
+)
+
+#import
+read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
+  rename(wg = "Row") %>%
+  gather("subject", "rms", -wg) %>%
+  glimpse() -> d_eeg 
+```
+ 
+It's clearly skewed, and negative display duration are impossible, so will fit a `glm` with `family = 'lognormal'`.
+
+```{r cache=TRUE, fig.cap = "Data are the root-mean-squaured (rms) over the odd-harmonic filtered waveforms."}
+d_eeg %>% ggplot(aes(x = rms)) + 
+    geom_histogram(binwidth = 0.2, fill = "skyblue", colour = "black") +
+    theme_lucid()
+```
+
+### Threshold Data
+
+Here we import that data and select the columns that we're interested in. Threshold gives the required display duration (in seconds) for the two stimuli to allow for accurate discrimination. 
+
+```{r threshold_import}
+fl <- "thresholds"
+
+my_cols_threshold <- cols(
+  person = col_character(),
+  group = col_character(),
+  staircase = col_double(),
+  threshold = col_double(),
+  log_threshold = col_double()
+)
+
+read_csv("../Experiment/process_results/thresholds.csv", col_types = my_cols_threshold) %>%
+  select(subject = "person", wg = "group", threshold) %>%
+  glimpse() -> d_dispthresh 
+
+rm(my_cols_threshold)
+```
+ 
+As above, a summary of the data.
+
+```{r, fig.cap="Histogram of the display duration thresholds."}
+d_dispthresh %>% ggplot(aes(x = threshold)) + 
+    geom_histogram(binwidth = 0.2, fill = "skyblue", colour = "black") +
+    theme_lucid()
+```
+
+Again, we have a skewed distribution, so will fit with `family = 'lognormal'`.
+
+### Control Data
+
+In addition to the primary EEG data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
+
+```{r import_control}
+
+fl <- "rms_Occ_Even.csv"
+
+read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
+  rename(wg = "Row") %>%
+  gather("subject", "rms", -wg) -> d_eeg_occ_even
+
+fl <- "rms_Par_Odd.csv"
+
+read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
+  rename(wg = "Row") %>%
+  gather("subject", "rms", -wg) -> d_eeg_par_odd
+
+rm(my_cols, fl)
+```
+
+## Subgroup Information
+
+Import subgroup information and display a table of the relationships that we will be investigating. 
+
+```{r}
+source("scripts/import_subgroup_comparisons.R")
+
+
+glimpse(subgroups)
+
+
+opts <- options(knitr.kable.NA = "")
+
+knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExtra::kable_styling(full_width = F)
+```
+

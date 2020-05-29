@@ -32,6 +32,14 @@ for (ii in 1:nrow(index_dat)) {
 } 
 
 subgroups %>% 
+    mutate(
+        normal_colour = as.numeric(normal),
+        normal_colour = if_else(is.na(normal_colour), 0, normal_colour),
+        normal_colour = if_else(normal_colour== 1, 1, 0),
+        index = kableExtra::cell_spec(
+            index, 
+            color = kableExtra::spec_color(as.numeric(normal), end = 0.7, na_color = "#FFFFFF",  option = "magma")),
+        ) %>%
     select(group, subgroup, index) %>% 
     pivot_wider(names_from = group, values_from = index) -> index_table
 

@@ -151,14 +151,15 @@ Import subgroup information and display a table of the relationships that we wil
 ```{r}
 source("scripts/import_subgroup_comparisons.R")
 
+
 glimpse(subgroups)
+
+
 opts <- options(knitr.kable.NA = "")
-knitr::kable(index_table, caption = "subgroup index")
+
+knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExtra::kable_styling(full_width = F)
 ```
 
-```{r}
-knitr::kable(normal_table, caption = "normal and non-normal subgroups")
-```
 
 # Bayesian Analysis 
 
