@@ -164,7 +164,7 @@ knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExt
 ### Types of Symmetry
 
 
-```{r, fig.cap = "Symmetries present in each group"}
+```{r, fig.cap = "Symmetries present in each group."}
 sym_dat <- read_csv("../subgroups/symmeries_in_group.csv") %>%
   mutate(group = str_to_upper(group))
 
