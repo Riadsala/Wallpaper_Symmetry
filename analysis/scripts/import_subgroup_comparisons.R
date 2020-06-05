@@ -38,17 +38,31 @@ to_remove <- list(
     "PMM-CMM", "CMM-PMM",
     "P3M1-P31M", "P31M-P3M1")
 
+to_remove <- append(to_remove, unlist(paste(group_names, "-", group_names, sep = "")))
+
 subgroups %>% 
+    select(group, subgroup, index) %>%
+    pivot_wider(
+        names_from = subgroup, 
+        values_from = index) %>%
+    pivot_longer(
+        -group, 
+        values_to = "index", 
+        names_to = "subgroup") %>%
+    left_join(subgroups) %>%
     mutate(
-        colour_code = as.numeric(normal)+1,
-        colour_code = if_else(group == subgroup, 3, colour_code),
-        colour_code = if_else(paste(group, subgroup, sep="-") %in% to_remove, 4, colour_code), 
+        colour_code = if_else(paste(group, subgroup, sep="-") %in% to_remove, 2, 1), 
+       index = as.character(index),
+        index = if_else(is.na(index), "-", index),
         index = kableExtra::cell_spec(
-            index, 
-            color = kableExtra::spec_color(colour_code, end = 0.9, na_color = "#FFFFFF")),
+             index, 
+             italic = if_else(normal == TRUE, TRUE, FALSE),
+             color = kableExtra::spec_color(colour_code, end = 0.95, na_color = "#FFFFFF")),
         ) %>%
     select(group, subgroup, index) %>% 
-    pivot_wider(names_from = group, values_from = index) -> index_table
+    pivot_wider(
+        names_from = group, 
+        values_from = index) -> index_table
 
 
 # filter by index to remove all non-valid relations

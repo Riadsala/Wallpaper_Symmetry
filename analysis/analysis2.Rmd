@@ -27,7 +27,7 @@ v_cols <- ggthemes::ptol_pal()(6)
 # read in some helper functions that will be used later
 source("scripts/helper_functions.R")
 
-options(mc.cores = parallel::detectCores())
+# options(mc.cores = parallel::detectCores())
 ```
 
 # Loading packages and importing data
@@ -328,4 +328,27 @@ m_disthresh2 <- brm(data = dat3,
 summary(m_eeg2)
 
 summary(m_disthresh2)
+```
+
+## Modelling by Subgroup
+
+```{r}
+source("scripts/get_subgroup_comparisons.R")
+
+subgroup_comp$eeg <- get_subgroup_comparisons2(my_samples$eeg, sym_dat)
+
+subgroup_comp$eeg %>% group_by(key) %>%
+  summarise(
+    d_ref = unique(d_ref),
+    d_rot = unique(d_rot),
+    d_gli = unique(d_gli),
+    value = mean(value)
+  ) -> comp_info
+
+m <- brm(data = comp_info, value ~ d_rot + d_ref + d_gli)
+
+sym_dat
+
+subgroups
+
 ```

@@ -1,6 +1,7 @@
 get_subgroup_comparisons2 <- function(m_samples, n_iter) {
   
-  subgroup_comp <- tibble(key = as.character(), value = as.numeric())
+  subgroup_comp <- tibble(key = as.character(), value = as.numeric(), 
+                          d_ref = as.numeric(), d_rot = as.numeric(), d_gli = as.numeric())
   
   for (ii in 1:nrow(subgroups)) {
    subgroup_comp <- bind_rows(
@@ -9,7 +10,13 @@ get_subgroup_comparisons2 <- function(m_samples, n_iter) {
        key = subgroups$label[ii],
        index = subgroups$index[ii],
        normal = subgroups$normal[ii],
-       value = (m_samples[subgroups$subgroup[ii]] - m_samples[subgroups$group[ii]])[[1]]))
+       value = (m_samples[subgroups$subgroup[ii]] - m_samples[subgroups$group[ii]])[[1]],
+       d_ref = filter(sym_dat, group == subgroups$group[ii])$reflection -
+         filter(sym_dat, group == subgroups$subgroup[ii])$reflection,
+       d_rot = filter(sym_dat, group == subgroups$group[ii])$rotation -
+         filter(sym_dat, group == subgroups$subgroup[ii])$rotation,
+       d_gli = filter(sym_dat, group == subgroups$group[ii])$glide -
+         filter(sym_dat, group == subgroups$subgroup[ii])$glide))
   }
   
   subgroup_comp$index <- as.factor(subgroup_comp$index)

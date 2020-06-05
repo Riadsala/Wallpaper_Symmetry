@@ -1594,6 +1594,42 @@ Figure 2.2: The density plot shows the distribution of the empirical data, while
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 </div>
+<div id="modelling-by-subgroup" class="section level2">
+<h2><span class="header-section-number">2.4</span> Modelling by Subgroup</h2>
+<pre><code>## # A tibble: 16 x 4
+##    group rotation reflection glide
+##    &lt;chr&gt;    &lt;dbl&gt;      &lt;dbl&gt; &lt;dbl&gt;
+##  1 P2           2          0     0
+##  2 PM           0          1     0
+##  3 PG           0          0     1
+##  4 CM           0          1     1
+##  5 PMM          2          2     0
+##  6 PMG          2          1     1
+##  7 PGG          2          0     2
+##  8 CMM          2          2     2
+##  9 P4           4          0     0
+## 10 P4M          4          4     2
+## 11 P4G          4          2     4
+## 12 P3           3          0     0
+## 13 P3M1         3          3     3
+## 14 P31M         3          3     3
+## 15 P6           6          0     0
+## 16 P6M          6          6     6</code></pre>
+<pre><code>## # A tibble: 63 x 5
+##    group subgroup index normal label                   
+##    &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;chr&gt;                   
+##  1 PG    PM           2 TRUE   &quot;PG $\\rightarrow$ PM&quot;  
+##  2 PG    CM           2 TRUE   &quot;PG $\\rightarrow$ CM&quot;  
+##  3 P2    PGG          2 TRUE   &quot;P2 $\\rightarrow$ PGG&quot; 
+##  4 PG    PGG          2 TRUE   &quot;PG $\\rightarrow$ PGG&quot; 
+##  5 P2    PMG          2 TRUE   &quot;P2 $\\rightarrow$ PMG&quot; 
+##  6 PG    PMG          2 TRUE   &quot;PG $\\rightarrow$ PMG&quot; 
+##  7 PM    PMG          2 TRUE   &quot;PM $\\rightarrow$ PMG&quot; 
+##  8 CM    PMG          4 FALSE  &quot;CM $\\rightarrow$ PMG&quot; 
+##  9 PGG   PMG          2 TRUE   &quot;PGG $\\rightarrow$ PMG&quot;
+## 10 P2    PMM          2 TRUE   &quot;P2 $\\rightarrow$ PMM&quot; 
+## # … with 53 more rows</code></pre>
+</div>
 </div>
 
 

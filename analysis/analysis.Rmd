@@ -152,10 +152,6 @@ Import subgroup information and display a table of the relationships that we wil
 ```{r}
 source("scripts/import_subgroup_comparisons.R")
 
-
-glimpse(subgroups)
-
-
 opts <- options(knitr.kable.NA = "")
 
 knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExtra::kable_styling(full_width = F)
@@ -168,14 +164,7 @@ knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExt
 sym_dat <- read_csv("../subgroups/symmeries_in_group.csv") %>%
   mutate(group = str_to_upper(group))
 
-sym_dat %>% pivot_longer(-group, names_to = "symmetry", values_to = "order") %>%
-  ggplot(aes(x = symmetry, y = order, fill = as.factor(order))) + geom_col() + facet_wrap(~ group) +
-  theme_bw() + 
-  scale_y_continuous(breaks = c(2,4,6)) + 
-  ggthemes::scale_fill_ptol() + 
-  theme(
-    panel.grid.minor=element_blank(), 
-    legend.position = "none")
+knitr::kable(sym_dat, caption = "wallpaper group summary", escape = "F") %>% kableExtra::kable_styling(full_width = F)
 
 ```
 
