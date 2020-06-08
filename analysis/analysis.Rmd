@@ -20,6 +20,7 @@ library(patchwork)
 library(magick)
 
 knitr::opts_chunk$set(echo = FALSE, message=FALSE, fig.align='center')
+options(knitr.table.format = "html")
 
 # specify some colours to use in the plots
 v_cols <- ggthemes::ptol_pal()(6)
@@ -146,29 +147,33 @@ rm(my_cols, fl)
 
 ## Symmetry Information
 
+Information on the symmetries and subgroups contained within each wallpaper group was obtained from <cite> and is summarised in the files `symmeries_in_group.csv`, `subgroup_relations.csv`, and `subgroup_normal.csv`.
+
+### Types of Symmetry
+
+<A short note on what is counted...i.e., so the reader understands that P2 has one rotation of order 2, etc>
+
+```{r, fig.cap = "Symmetries present in each group."}
+
+sym_dat <- read_csv("../subgroups/symmeries_in_group.csv") %>%
+  mutate(group = str_to_upper(group))
+
+knitr::kable(sym_dat, caption = "wallpaper group summary") %>% 
+    kableExtra::kable_styling(full_width = F)
+```
+
 ### Subgroup Relationships
-Import subgroup information and display a table of the relationships that we will be investigating. 
+Import subgroup information and display a table of the relationships that we will be investigating.
 
 ```{r}
 source("scripts/import_subgroup_comparisons.R")
 
 opts <- options(knitr.kable.NA = "")
 
-knitr::kable(index_table, caption = "subgroup index", escape = "F") %>% kableExtra::kable_styling(full_width = F)
+knitr::kable(index_table, caption = "Summary of subgroup relationships. The numbers indicate the index of the subgroup, while italics indicate normal subgroups. Relationships written in yellow text are not included in our analysis.", escape = "F") %>% kableExtra::kable_styling(full_width = F)
 ```
 
-### Types of Symmetry
-
-
-```{r, fig.cap = "Symmetries present in each group."}
-sym_dat <- read_csv("../subgroups/symmeries_in_group.csv") %>%
-  mutate(group = str_to_upper(group))
-
-knitr::kable(sym_dat, caption = "wallpaper group summary", escape = "F") %>% kableExtra::kable_styling(full_width = F)
-
-```
-
-
+We will remove identity relationships (i.e., a group is a subgroup of itself) and the three pairs of wallpapers groups that it subgroups of each other (e.g., PM is a subgroup of CM, and CM is a subgroup of PM). This leaves us with a total of `r nrow(subgroups)` subgroups to include in our analysis.
 
 # Bayesian Analysis 
 
@@ -349,6 +354,7 @@ subgroup_comp$par_odd  <- get_subgroup_comparisons2(my_samples$par_odd)
 Finally, we calculate the probability that the RMS difference between subgroup and supergroup is larger than zero given the data. This information is then binned so we can colour in the posterior density plots.
 
 ```{r define_comparison_summary_function}
+
 comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
   # compute probabilties
   subgroup_comp_dat %>%
@@ -369,7 +375,8 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
 
 Now we will use it!
   
-```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
+```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", cache=TRUE}
+
 # compute probabilties
 comp_summary$eeg <- comparison_summary(subgroup_comp$eeg, TRUE, 'rms')
 
@@ -391,13 +398,14 @@ p2 <-plot_comparisons(
 
 both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
 both_plts
+
 ```
 
 ## Psychophysical Data
 
 We can do the same for the display duration thresholds from our psychophysics experiment. Here we are looking for the opposite effect, namely that display larger are larger for subgroups than for supergroups (see main paper), so we calculate the probability that differences in duration are smaller than zero. 
 
-```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero."}
+```{r ,fig.height=8, cache = TRUE, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero."}
 
 # compute probabilties
 comp_summary$threshold <- comparison_summary(subgroup_comp$threshold, FALSE, 'threshold')
@@ -426,7 +434,7 @@ both_plts
 
 We will now do exactly the same with the control data (odd harmonic data from parietal electrodes and even harmonic data from occipital electrodes)
 
-```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
+```{r fig.height=8, cache=TRUE, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
 
 # compute probabilties
 comp_summary$occ_even <- comparison_summary(subgroup_comp$occ_even, TRUE, 'rms') 
@@ -473,7 +481,7 @@ both_plts + plot_annotation(title = 'Even harmonic data from occipital electrode
 
 We can summarise the subgroup comparison plots above by plotting ROC curves for each of our four measurements (Figure 3.5).
 
-```{r, fig.cap="This figure shows how many of our 64 comparisons are classed as having a greater-than-zero difference (less-than-zero for the display durations) for difference thresholds. between 0.5 an 1.0."}
+```{r, fig.cap="This figure shows how many of our 63 comparisons are classed as having a greater-than-zero difference (less-than-zero for the display durations) for difference thresholds. between 0.5 an 1.0."}
 
 count_comparisons <- function(comparisons, p) {
   x <- sum(comparisons$prob_one_tailed >= p)
@@ -499,7 +507,7 @@ df %>% gather("measurement", "number", -p) %>%
   xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
 ```
 
-If we take p=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/64 = 87.5% and 49/64 = 76.6% of the comparisons for the primary EEG and display durations repectively. This compares to the $32/64= 50.0% and 22/64 = 34.4% for the control EEG conditions. 
+If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/63 = 89% and 49/64 = 78% of the comparisons for the primary EEG and display durations repectively. This compares to the 32/64= 50% and 22/64 = 35% for the control EEG conditions. 
 
 # Additional Analysis
 
@@ -528,45 +536,69 @@ my_samples$eeg %>% select(P2, P3, P4, P6) %>%
 
 Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
 
-```{r, cache=TRUE}
-my_models <- list()
-comp_summary$eeg$index <- as.numeric(as.character(comp_summary$eeg$index))
-comp_summary$threshold$index <- as.numeric(as.character(comp_summary$threshold$index))
+First of all, we run for the eeg rms data. 
 
+```{r, cache=TRUE}
+
+# change index and normal variables to numeric for modelling
+my_models <- list()
+ 
+comp_summary$eeg %>% ungroup() %>%
+   mutate(
+     index = as.numeric(as.character(index)),
+     normal = if_else(normal, 1, 0)) -> comp_summary$eeg
+ 
 my_models$eeg <- brm(data = comp_summary$eeg, mean_value ~ index * normal)
-my_models$disp <- brm(data = comp_summary$threshold, mean_value ~ index * normal)
+
 summary(my_models$eeg)
+
+```
+
+And now for the display duration thresholds.
+
+```{r, cache=TRUE}
+
+# change index and normal variables to numeric for modelling
+
+comp_summary$threshold %>% ungroup() %>%
+   mutate(
+     index = as.numeric(as.character(index)),
+     normal = if_else(normal, 1, 0)) -> comp_summary$threshold
+ 
+my_models$disp <- brm(data = comp_summary$threshold, mean_value ~ index * normal)
+
 summary(my_models$disp)
+
 ```
 
 We can see that the index of the subgroup relationship has an effect on both the difference in log(rms) and the difference in log(display duration): relationships with a higher index lead to larger differences. 
 
 ```{r, fig.cap = "The effect of index and normality on log(rms) and log(ms)."}
-comp_summary$eeg %>% 
+comp_summary$eeg %>%
   modelr::data_grid(index, normal) %>%
   add_fitted_draws(my_models$eeg, n = 100) %>%
   mutate(model = "primary eeg") -> d_plt_eeg
-
+# 
 comp_summary$threshold %>% 
-  modelr::data_grid(index, normal) %>%
-  add_fitted_draws(my_models$disp, n = 100) %>%
-  mutate(model = "psychophysical threshold") -> d_plt_disp
-
-d_summary <- bind_rows(comp_summary$threshold %>% mutate(model = "psychophysical threshold"),
-                       comp_summary$eeg %>% mutate(model = "primary eeg"))
-
-bind_rows(d_plt_eeg, d_plt_disp) %>%
-  ggplot(aes(x =  index, y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
-  geom_line(alpha = .15) +
-  facet_wrap(~ model, scales="free_y") + 
-  geom_jitter(
-    data = d_summary, 
-    aes(x =  index, y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
-  theme_minimal() + 
-  ggthemes::scale_colour_ptol(labels = c("non-normal", "normal")) + 
-  scale_x_continuous("index", breaks = c(2,3,4,6,8,12)) +
-  scale_y_continuous("value") +
-  theme(panel.grid.minor = element_blank(), legend.title = element_blank()) 
+   modelr::data_grid(index, normal) %>%
+   add_fitted_draws(my_models$disp, n = 100) %>%
+   mutate(model = "psychophysical threshold") -> d_plt_disp
+ 
+ d_summary <- bind_rows(comp_summary$threshold %>% mutate(model = "psychophysical threshold"),
+                        comp_summary$eeg %>% mutate(model = "primary eeg"))
+ 
+ bind_rows(d_plt_eeg, d_plt_disp) %>%
+   ggplot(aes(x =  index, y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
+   geom_line(alpha = .15) +
+   facet_wrap(~ model, scales="free_y") + 
+   geom_jitter(
+     data = d_summary, 
+     aes(x =  index, y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
+   theme_minimal() + 
+   ggthemes::scale_colour_ptol(labels = c("non-normal", "normal")) + 
+   scale_x_continuous("index", breaks = c(2,3,4,6,8,12)) +
+   scale_y_continuous("value") +
+   theme(panel.grid.minor = element_blank(), legend.title = element_blank()) 
 ```
 
 ## Correlation Between Primary EEG data and Psychophysical Thresholds
@@ -575,24 +607,29 @@ Finally, we will investigate whether there is a correlation between the our prim
 
 ```{r compare_comparisons, cache=TRUE}
 bind_rows(
-  select(comp_summary$eeg, measurement, key, mean_value),
-  select(comp_summary$threshold, measurement, key, mean_value)) %>%
+  select(comp_summary$eeg, measurement, key, mean_value, index),
+  select(comp_summary$threshold, measurement, key, mean_value, index)) %>%
   spread(measurement, mean_value) -> d
 
 m <- brm(data = d, threshold ~ rms)
 
-bayes_R2(m)
+bR2 <- bayes_R2(m)
+
+print(bR2)
+
 ```
 
-We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, 95\% credible interval is 0.026 - 0.302). 
+We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, 95\% credible interval is `r round(bR2[3],2)` - `r round(bR2[4], 2)`). 
 
 ```{r fig.cap="Scatter plot showing the correlation between our two measures. Each line is a sample from the posterior of a Bayesian linear regression."}
-d %>% 
-  modelr::data_grid(rms = seq(-0.2, 0.8, 0.1)) %>%
+
+d %>%
+  modelr::data_grid(rms = seq(-0.2, 1, 0.1)) %>%
   add_fitted_draws(m, n = 100) %>%
   ggplot(aes(x = rms, y = threshold, color = as.factor(index))) +
   geom_line(aes(y = .value, group = .draw), alpha = .1, colour = "thistle4") +
   geom_point(data = d) +
-  theme_minimal() + 
+  theme_minimal() +
   ggthemes::scale_colour_ptol("index")
+
 ```
