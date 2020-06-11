@@ -337,6 +337,8 @@ source("scripts/get_subgroup_comparisons.R")
 
 subgroup_comp$eeg <- get_subgroup_comparisons2(my_samples$eeg, sym_dat)
 
+subgroup_comp$eeg
+
 subgroup_comp$eeg %>% group_by(key) %>%
   summarise(
     d_ref = unique(d_ref),
@@ -347,8 +349,9 @@ subgroup_comp$eeg %>% group_by(key) %>%
 
 m <- brm(data = comp_info, value ~ d_rot + d_ref + d_gli)
 
-sym_dat
+```
 
-subgroups
+```{r}
+summary(m)
 
 ```
