@@ -31,15 +31,7 @@ source("scripts/helper_functions.R")
 options(mc.cores = parallel::detectCores())
 ```
 
-# Loading packages and importing data
-
-##  Packages
-
-Details of packages, etc, are given below.
-
-```{r}
-sessionInfo()
-```
+# Importing data
 
 ```{r}
 # Use multiple cores and set number of iterations. 
@@ -53,11 +45,9 @@ comp_summary <- list()
 subgroup_comp <- list()
 ```
 
-## Import Data
-
 Here we import our data and make some summary plots.
 
-### EEG Data
+## EEG Data
 
 Importing the primary EEG data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
 
@@ -92,7 +82,7 @@ d_eeg %>% ggplot(aes(x = rms)) +
     theme_lucid()
 ```
 
-### Threshold Data
+## Threshold Data
 
 Here we import that data and select the columns that we're interested in. Threshold gives the required display duration (in seconds) for the two stimuli to allow for accurate discrimination. 
 
@@ -124,7 +114,7 @@ d_dispthresh %>% ggplot(aes(x = threshold)) +
 
 Again, we have a skewed distribution, so will fit with `family = 'lognormal'`.
 
-### Control Data
+## Control Data
 
 In addition to the primary EEG data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
 
@@ -149,7 +139,7 @@ rm(my_cols, fl)
 
 Information on the symmetries and subgroups contained within each wallpaper group was obtained from <cite> and is summarised in the files `symmeries_in_group.csv`, `subgroup_relations.csv`, and `subgroup_normal.csv`.
 
-### Types of Symmetry
+## Types of Symmetry
 
 <A short note on what is counted...i.e., so the reader understands that P2 has one rotation of order 2, etc>
 
@@ -162,7 +152,7 @@ knitr::kable(sym_dat, caption = "wallpaper group summary") %>%
     kableExtra::kable_styling(full_width = F)
 ```
 
-### Subgroup Relationships
+## Subgroup Relationships
 Import subgroup information and display a table of the relationships that we will be investigating.
 
 ```{r}
@@ -632,4 +622,13 @@ d %>%
   theme_minimal() +
   ggthemes::scale_colour_ptol("index")
 
+```
+
+
+# Package and Session Information
+
+Details of packages, etc, are given below.
+
+```{r}
+sessionInfo()
 ```
