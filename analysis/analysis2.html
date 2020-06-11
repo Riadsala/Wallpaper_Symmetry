@@ -1596,20 +1596,6 @@ Figure 2.2: The density plot shows the distribution of the empirical data, while
 </div>
 <div id="modelling-by-subgroup" class="section level2">
 <h2><span class="header-section-number">2.4</span> Modelling by Subgroup</h2>
-<pre><code>## # A tibble: 1,260,000 x 7
-##    key                    value d_ref d_rot d_gli index normal
-##    &lt;chr&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;fct&gt; &lt;lgl&gt; 
-##  1 &quot;PG $\\rightarrow$ PM&quot; 0.457    -1     0     1 2     TRUE  
-##  2 &quot;PG $\\rightarrow$ PM&quot; 0.374    -1     0     1 2     TRUE  
-##  3 &quot;PG $\\rightarrow$ PM&quot; 0.249    -1     0     1 2     TRUE  
-##  4 &quot;PG $\\rightarrow$ PM&quot; 0.387    -1     0     1 2     TRUE  
-##  5 &quot;PG $\\rightarrow$ PM&quot; 0.333    -1     0     1 2     TRUE  
-##  6 &quot;PG $\\rightarrow$ PM&quot; 0.327    -1     0     1 2     TRUE  
-##  7 &quot;PG $\\rightarrow$ PM&quot; 0.313    -1     0     1 2     TRUE  
-##  8 &quot;PG $\\rightarrow$ PM&quot; 0.294    -1     0     1 2     TRUE  
-##  9 &quot;PG $\\rightarrow$ PM&quot; 0.323    -1     0     1 2     TRUE  
-## 10 &quot;PG $\\rightarrow$ PM&quot; 0.439    -1     0     1 2     TRUE  
-## # … with 1,259,990 more rows</code></pre>
 <pre><code>##  Family: gaussian 
 ##   Links: mu = identity; sigma = identity 
 ## Formula: value ~ d_rot + d_ref + d_gli 
@@ -1619,18 +1605,1304 @@ Figure 2.2: The density plot shows the distribution of the empirical data, while
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     0.31      0.06     0.20     0.42 1.00     5027     3393
-## d_rot        -0.01      0.02    -0.05     0.03 1.00     4051     2968
-## d_ref        -0.13      0.02    -0.17    -0.09 1.00     3791     2923
-## d_gli         0.08      0.02     0.04     0.12 1.00     3174     2922
+## Intercept     0.31      0.06     0.20     0.42 1.00     4645     3207
+## d_rot        -0.01      0.02    -0.05     0.03 1.00     4246     3105
+## d_ref        -0.13      0.02    -0.18    -0.09 1.00     3072     2887
+## d_gli         0.08      0.02     0.05     0.12 1.00     2840     2626
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     0.23      0.02     0.20     0.28 1.00     4334     2991
+## sigma     0.23      0.02     0.19     0.28 1.00     4460     3036
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
+<table class="table" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+key
+</th>
+<th style="text-align:left;">
+index
+</th>
+<th style="text-align:right;">
+d_ref
+</th>
+<th style="text-align:right;">
+d_rot
+</th>
+<th style="text-align:right;">
+d_gli
+</th>
+<th style="text-align:right;">
+value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> CMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.3638848
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> P31M
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.0531563
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> P3M1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.3475369
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.2320648
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.6392264
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+0.4416409
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> PMG
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.2289844
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CM <span class="math inline">\(\rightarrow\)</span> PMM
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.4181245
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CMM <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-0.1318199
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CMM <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.2753416
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CMM <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0.0777561
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> CMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.8244835
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> P4
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.4645861
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0.6926636
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+1.0998251
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> P6
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.4658895
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+0.9022396
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> PGG
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.2224513
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> PMG
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.6895832
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P2 <span class="math inline">\(\rightarrow\)</span> PMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.8787232
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P3 <span class="math inline">\(\rightarrow\)</span> P31M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.3841489
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P3 <span class="math inline">\(\rightarrow\)</span> P3M1
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.6785295
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P3 <span class="math inline">\(\rightarrow\)</span> P6
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.3362833
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P3 <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+0.7726335
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P31M <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.3884846
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P3M1 <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.0941040
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P4 <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0.2280775
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P4 <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.6352390
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P4G <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.4071615
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+P6 <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+0.4363502
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> CM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.4442469
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> CMM
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.8081316
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> P31M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.4974032
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> P3M1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.7917838
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.6763117
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+1.0834732
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+0.8858877
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> PGG
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.2060994
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> PM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.3387859
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> PMG
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.6732313
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PG <span class="math inline">\(\rightarrow\)</span> PMM
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.8623713
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PGG <span class="math inline">\(\rightarrow\)</span> CMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.6020322
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PGG <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.4702123
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PGG <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.8773738
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PGG <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0.6797883
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PGG <span class="math inline">\(\rightarrow\)</span> PMG
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.4671319
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PGG <span class="math inline">\(\rightarrow\)</span> PMM
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+0.6562719
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> CMM
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.4693457
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> P31M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.1586172
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> P3M1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.4529978
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+0.3375258
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.7446873
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+0.5471018
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> PMG
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.3344454
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PM <span class="math inline">\(\rightarrow\)</span> PMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.5235854
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMG <span class="math inline">\(\rightarrow\)</span> CMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.1349003
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMG <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+0.0030804
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMG <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+-3
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0.4102419
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMG <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-5
+</td>
+<td style="text-align:right;">
+0.2126564
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMG <span class="math inline">\(\rightarrow\)</span> PMM
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.1891400
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMM <span class="math inline">\(\rightarrow\)</span> P4G
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-0.1860596
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMM <span class="math inline">\(\rightarrow\)</span> P4M
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+-2
+</td>
+<td style="text-align:right;">
+0.2211019
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+PMM <span class="math inline">\(\rightarrow\)</span> P6M
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-4
+</td>
+<td style="text-align:right;">
+-6
+</td>
+<td style="text-align:right;">
+0.0235164
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 

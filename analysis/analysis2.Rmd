@@ -337,10 +337,11 @@ source("scripts/get_subgroup_comparisons.R")
 
 subgroup_comp$eeg <- get_subgroup_comparisons2(my_samples$eeg, sym_dat)
 
-subgroup_comp$eeg
+
 
 subgroup_comp$eeg %>% group_by(key) %>%
   summarise(
+    index = unique(index),
     d_ref = unique(d_ref),
     d_rot = unique(d_rot),
     d_gli = unique(d_gli),
@@ -353,5 +354,7 @@ m <- brm(data = comp_info, value ~ d_rot + d_ref + d_gli)
 
 ```{r}
 summary(m)
+
+knitr::kable(comp_info) %>% kableExtra::kable_styling()
 
 ```
