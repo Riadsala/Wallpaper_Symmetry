@@ -357,4 +357,19 @@ summary(m)
 
 knitr::kable(comp_info) %>% kableExtra::kable_styling()
 
+
+comp_info %>% filter(d_ref == 0, d_gli == 0) %>% ggplot(aes(x = d_rot, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("rotations only: no reflections or glides")+ ggrepel::geom_label_repel()
+
+comp_info %>% filter(d_rot == 0, d_gli == 0) %>% ggplot(aes(x = d_ref, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("reflections only: no rotations or glides")+ ggrepel::geom_label_repel()
+
+
+comp_info %>% filter(d_ref == 0) %>% ggplot(aes(x = d_rot, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("no reflections") + ggrepel::geom_label_repel()
+
+comp_info %>% filter(d_rot == 0) %>% ggplot(aes(x = d_ref, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("no rotations")+ ggrepel::geom_label_repel()
+
+
+
+
+
+
 ```
