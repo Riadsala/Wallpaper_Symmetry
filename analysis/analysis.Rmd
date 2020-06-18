@@ -81,6 +81,17 @@ d_eeg %>% ggplot(aes(x = rms)) +
     geom_histogram(binwidth = 0.2, fill = "skyblue", colour = "black") +
     theme_lucid()
 ```
+```{r}
+
+d_eeg %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>% ggplot(aes(x = wg, y = log(rms))) + geom_boxplot(notch = T)
+   
+d_eeg %>% group_by(wg) %>% summarise(
+  mean_log_rms = mean(log(rms)),
+  sd_log_rms = sd(log(rms)),
+  median_log_rms = median(log(rms)))                                                               
+                                                                                                                          
+                                                               
+```
 
 ## Threshold Data
 
@@ -522,6 +533,24 @@ my_samples$eeg %>% select(P2, P3, P4, P6) %>%
   scale_fill_viridis_d()
 ```
 
+Will try fitting a new parametric model on rotations
+
+```{r}
+
+d_eeg %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>%
+  mutate(orientation = parse_number(wg))-> d_eeg_rot 
+
+
+m_eeg_rot <- brm(data = d_eeg_rot, rms ~ orientation + (1|subject), family = "lognormal")
+
+d_eeg_rot %>% modelr::data_grid(orientation) %>%
+  add_fitted_draws(m_eeg_rot, re_formula = NA, n=200) %>%
+  ggplot() + 
+  geom_line(data = d_eeg_rot, aes(x = orientation, y = rms, group = subject), alpha = 0.1, colour = "darkred") +
+  geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .2, colour = "thistle4") + 
+  theme_minimal() 
+```
+
 ## Index and Normality 
 
 Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
@@ -540,7 +569,7 @@ comp_summary$eeg %>% ungroup() %>%
  
 my_models$eeg <- brm(data = comp_summary$eeg, mean_value ~ index * normal)
 
-summary(my_models$eeg)
+
 
 ```
 
