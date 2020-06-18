@@ -330,7 +330,7 @@ summary(m_eeg2)
 summary(m_disthresh2)
 ```
 
-## Modelling by Subgroup
+## Modelling by Subgroup - EEG
 
 ```{r}
 source("scripts/get_subgroup_comparisons.R")
@@ -367,9 +367,44 @@ comp_info %>% filter(d_ref == 0) %>% ggplot(aes(x = d_rot, y = value, label = ke
 
 comp_info %>% filter(d_rot == 0) %>% ggplot(aes(x = d_ref, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("no rotations")+ ggrepel::geom_label_repel()
 
+```
 
 
+## Modelling by Subgroup - Beh
 
+```{r}
+source("scripts/get_subgroup_comparisons.R")
+
+subgroup_comp$threshold <- get_subgroup_comparisons2(my_samples$threshold, sym_dat)
+
+
+subgroup_comp$threshold %>% group_by(key) %>%
+  summarise(
+    index = unique(index),
+    d_ref = unique(d_ref),
+    d_rot = unique(d_rot),
+    d_gli = unique(d_gli),
+    value = mean(value)
+  ) -> comp_info
+
+m <- brm(data = comp_info, value ~ d_rot + d_ref + d_gli)
+
+```
+
+```{r}
+summary(m)
+
+knitr::kable(comp_info) %>% kableExtra::kable_styling()
+
+
+comp_info %>% filter(d_ref == 0, d_gli == 0) %>% ggplot(aes(x = d_rot, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("rotations only: no reflections or glides")+ ggrepel::geom_label_repel()
+
+comp_info %>% filter(d_rot == 0, d_gli == 0) %>% ggplot(aes(x = d_ref, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("reflections only: no rotations or glides")+ ggrepel::geom_label_repel()
+
+
+comp_info %>% filter(d_ref == 0) %>% ggplot(aes(x = d_rot, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("no reflections") + ggrepel::geom_label_repel()
+
+comp_info %>% filter(d_rot == 0) %>% ggplot(aes(x = d_ref, y = value, label = key)) + geom_point() + geom_smooth(method = "lm") + ggtitle("no rotations")+ ggrepel::geom_label_repel()
 
 
 ```
