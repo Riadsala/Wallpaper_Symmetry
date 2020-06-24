@@ -58,6 +58,8 @@ print(plt)
 
 ```
 
+We now import the data. We have three variables: wallpaper group (wg), subject, and root-mean-squared amplitude (rms). 
+
 ```{r eeg_import}
 fl <- "rms_Occ_Odd.csv"
 
@@ -74,24 +76,20 @@ read_csv(paste("data/", fl, sep = ""), col_types = my_cols) %>%
   glimpse() -> d_eeg 
 ```
  
-It's clearly skewed, and negative display duration are impossible, so will fit a `glm` with `family = 'lognormal'`.
+If we plot the distribution of rms, we can clearly see that it is skewed. Furthermore, as negative rms amplitudes are impossible we will use a `lognormal` distribution to model these data.
 
-```{r cache=TRUE, fig.cap = "Data are the root-mean-squaured (rms) over the odd-harmonic filtered waveforms."}
+```{r cache=TRUE, fig.cap = "Data are the root-mean-squaured (rms) amplitudes over the odd-harmonic filtered waveforms."}
 d_eeg %>% ggplot(aes(x = rms)) + 
     geom_histogram(binwidth = 0.2, fill = "skyblue", colour = "black") +
     theme_lucid()
 ```
-```{r}
+                                                 
+The table below shows how many groups per participant we have data for. 
 
-d_eeg %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>% ggplot(aes(x = wg, y = log(rms))) + geom_boxplot(notch = T)
-   
-d_eeg %>% group_by(wg) %>% summarise(
-  mean_log_rms = mean(log(rms)),
-  sd_log_rms = sd(log(rms)),
-  median_log_rms = median(log(rms)))                                                               
-                                                                                                                          
-                                                               
+```{r}
+d_eeg %>% group_by(subject) %>% summarise(count = n()) %>% knitr::kable()
 ```
+                                                 
 
 ## Threshold Data
 
@@ -114,8 +112,9 @@ read_csv("../Experiment/process_results/thresholds.csv", col_types = my_cols_thr
 
 rm(my_cols_threshold)
 ```
- 
-As above, a summary of the data.
+
+
+As above, a summary of the data. And again, we have a skewed distribution, (with negative display durations being impossible), so we will use also use a `lognormal` distribution to model the behaviour data. 
 
 ```{r, fig.cap="Histogram of the display duration thresholds."}
 d_dispthresh %>% ggplot(aes(x = threshold)) + 
@@ -123,7 +122,12 @@ d_dispthresh %>% ggplot(aes(x = threshold)) +
     theme_lucid()
 ```
 
-Again, we have a skewed distribution, so will fit with `family = 'lognormal'`.
+
+The table below shows how many groups per participant we have data for. 
+
+```{r}
+d_dispthresh %>% group_by(subject) %>% summarise(count = n()) %>% knitr::kable()
+```
 
 ## Control Data
 
@@ -150,7 +154,7 @@ rm(my_cols, fl)
 
 Information on the symmetries and subgroups contained within each wallpaper group was obtained from <cite> and is summarised in the files `symmeries_in_group.csv`, `subgroup_relations.csv`, and `subgroup_normal.csv`.
 
-## Types of Symmetry
+### Types of Symmetry
 
 <A short note on what is counted...i.e., so the reader understands that P2 has one rotation of order 2, etc>
 
@@ -163,7 +167,7 @@ knitr::kable(sym_dat, caption = "wallpaper group summary") %>%
     kableExtra::kable_styling(full_width = F)
 ```
 
-## Subgroup Relationships
+### Subgroup Relationships
 Import subgroup information and display a table of the relationships that we will be investigating.
 
 ```{r}
@@ -514,41 +518,44 @@ If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are p
 
 ## Replicatation of Kohler et al (2016)
 
-We can lok at the groups that only contain orientation, and see if we obtain the parametric response as documented in Kohler et al. (2016). We one might predict based on those results, we get a corresponding pattern of display duration thresholds, with the time taken to detect the symmetry dreasing as we increase the amount of rotational symmetry.
+We can look at the groups that only contain orientation, and see if we obtain the parametric response as documented in Kohler et al. (2016). We will also investigate if we see the corresponding pattern with the display duration threshold data, with the time taken to detect the symmetry dreasing as we increase the amount of rotational symmetry.
 
-Curiosuly, we do not have a large difference betwee P4 and P6 in the eeg data. 
 
-```{r, fig.cap = "The effect of increasing the amount of rotational symmetry.", fig.height=3}
-my_samples$eeg %>% select(P2, P3, P4, P6) %>%
-  pivot_longer(names_to = "wallpaper group", cols = c(P2, P3, P4, P6)) %>% 
-  mutate(exp = "eeg") %>%
-  bind_rows(
-    my_samples$threshold %>% select(P2, P3, P4, P6) %>% 
-      pivot_longer(names_to = "wallpaper group", cols = c(P2, P3, P4, P6)) %>%
-      mutate(exp = "display thresholds")) %>% 
-  ggplot() + aes(x = value, fill = `wallpaper group`) + 
-    geom_density(alpha = 0.35) + 
-    facet_wrap(~ exp, scale = "free_y") + 
-  theme_minimal() + 
-  scale_fill_viridis_d()
-```
-
-Will try fitting a new parametric model on rotations
-
-```{r}
-
+```{r, cache = TRUE}
 d_eeg %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>%
   mutate(orientation = parse_number(wg))-> d_eeg_rot 
 
 
 m_eeg_rot <- brm(data = d_eeg_rot, rms ~ orientation + (1|subject), family = "lognormal")
 
+summary(m_eeg_rot)
+
 d_eeg_rot %>% modelr::data_grid(orientation) %>%
   add_fitted_draws(m_eeg_rot, re_formula = NA, n=200) %>%
   ggplot() + 
   geom_line(data = d_eeg_rot, aes(x = orientation, y = rms, group = subject), alpha = 0.1, colour = "darkred") +
-  geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .2, colour = "thistle4") + 
-  theme_minimal() 
+  geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
+  theme_minimal() -> p1
+```
+```{r, cache = TRUE}
+d_dispthresh %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>%
+  mutate(orientation = parse_number(wg))-> d_disp_rot 
+
+m_disp_rot <- brm(data = d_disp_rot, threshold ~ orientation + (1|subject), family = "lognormal")
+
+summary(m_disp_rot)
+
+d_disp_rot %>% modelr::data_grid(orientation) %>%
+  add_fitted_draws(m_disp_rot, re_formula = NA, n=200) %>%
+  ggplot() + 
+  geom_line(data = d_disp_rot, aes(x = orientation, y = threshold, group = subject), alpha = 0.1, colour = "darkred") +
+  geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
+  theme_minimal() -> p2
+```
+
+```{r}
+p1 + p2
+
 ```
 
 ## Index and Normality 
