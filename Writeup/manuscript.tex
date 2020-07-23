@@ -9,18 +9,19 @@
 \title{Template for preparing your research report submission to PNAS using Overleaf}
 
 % Use letters for affiliations, numbers to show equal authorship (if applicable) and to indicate the corresponding author
-\author[a,1]{Peter J. Kohler}
-\author[b]{Oda \r{A}sgard} 
-\author[b]{Alasdair D. F. Clarke}
+\author[a, b, 1]{Peter J. Kohler}
+\author[c]{Alasdair D. F. Clarke}
 
-\affil[a]{Stanford University, Department of Psychology}
-\affil[b]{University of Essex, Department of Psychology, Colchester, UK, CO4 3SQ}
+\affil[a]{York University, Department of Psychology, Toronto, ON M3J 1P3, Canada}
+\affil[b]{Centre for Vision Research, York University, Toronto, ON, M3J 1P3, Canada}
+\affil[c]{Stanford University, Department of Psychology, Stanford, CA 94305, United States}
+\affil[d]{University of Essex, Department of Psychology, Colchester, UK, CO4 3SQ}
 
 % Please give the surname of the lead author for the running footer
 \leadauthor{Kohler} 
 
 % Please add here a significance statement to explain the relevance of your work
-\significancestatement{Authors must submit a 120-word maximum statement about the significance of their research paper written at a level understandable to an undergraduate educated scientist outside their field of speciality. The primary goal of the Significance Statement is to explain the relevance of the work in broad context to a broad readership. The Significance Statement appears in the paper itself and is required for all research papers.}
+\significancestatement{Wallpaper groups were discovered in the mid-19th century, and the 17 groups constitute the complete set of possible ways of regularly tiling the 2D-plane. In recent years wallpaper groups have found use in the vision science community, as an ideal stimulus set for studying the perception of symmetries in textures. Here we present brain imaging and psychophysical data on the complete set of wallpaper groups and show the hierarchical organization among wallpaper groups in reflected in both visual cortex activity and performance on a symmetry detection task.}
 
 % Please include corresponding author, author contribution and author declaration information
 \authorcontributions{Please provide details of author contributions here.}
@@ -31,7 +32,7 @@
 \keywords{Keyword 1 $|$ Keyword 2 $|$ Keyword 3 $|$ ...} 
 
 \begin{abstract}
-A century of vision research has demonstrated that symmetry contributes to numerous domains of visual perception \cite{RN1311, RN1166,RN1682,RN1824}. In a 2-D image, the four fundamental symmetries, reflection, rotation, translation and glide reflection, can be combined in 17 distinct ways. These 17 “wallpaper” groups \cite{RN1562,RN1563,RN1425} obey a hierarchy, determined by mathematical group theory, where simpler groups are subgroups of more complex ones\cite{RN1711}. Here we measure symmetry-specific Steady-State Visual Evoked Potentials (SSVEPs), and find that the partial ordering of SSVEPs from visual cortex in human participants ($n=25$), preserve the hierarchical relationships between the wallpaper groups in $88.3\%$ (53 out of 60) of cases. This remarkable consistency between the structure of symmetry representations and mathematical group theory, is likely generated over visual development, through implicit learning of regularities in the environment. 
+A century of vision research has demonstrated that symmetry contributes to numerous domains of visual perception \cite{RN1311, RN1166,RN1682,RN1824}. In a 2-D image, the four fundamental symmetries, reflection, rotation, translation and glide reflection, can be combined in 17 distinct ways. These 17 “wallpaper” groups \cite{RN1562,RN1563,RN1425} obey a hierarchy, determined by mathematical group theory, where simpler groups are subgroups of more complex ones\cite{RN1711}. Here we probe representations of symmetries in wallpaper groups using two methods: Steady-State Visual Evoked Potentials (SSVEPs) recorded using EEG and psychophysical detection thresholds. We find that the hierarchical relationships between the wallpaper groups are almost perfectly preserved in both behavior and response amplitudes in visual cortex. This remarkable consistency between the structure of symmetry representations and mathematical group theory, is likely generated over visual development, through implicit learning of regularities in the environment. 
 \end{abstract}
 
 \dates{This manuscript was compiled on \today}
@@ -55,12 +56,21 @@ In the two spatial dimensions relevant for images, the four fundamental symmetri
 The visual stimuli for our experiment were multiple exemplar images belonging to each of the 17 wallpaper groups, generated from random-noise textures, as described in detail elsewhere \cite{RN1725}. To isolate brain activity specific to the symmetry structure in the images from activity associated with modulation of low-level features, we used a steady-state design, in which exemplar images belonging to 16 of the 17 wallpaper groups alternated with phase-scrambled images of the same group. Because all wallpapers are periodic images due to their lattice tiling structure, the phase-scrambled images are also a wallpaper group (P1). P1 contains no symmetries other than translation, while all other groups contain translation in combination with one or more of the other three fundamental symmetries (reflection, rotation, glide reflection) \cite{RN1425}. 
 Exemplars from each of the 16 groups alternated at 0.83 Hz with their corresponding set of P1 exemplars, that were matched in terms of their Fourier power spectrum. Because the P1 group serves a control stimulus in this approach, the experiment was restricted to the remaining 16 groups. This design allows us to isolate responses to structural features beyond the shared power spectrum, including any symmetries other than translation, in the odd harmonics of the image update frequency \cite{RN1725,RN1540} [NORCIA 2002 MISSING]. Thus, the magnitude of the odd harmonic response components can be used as a distance metric for each group, with distance being measured relative to the simplest group, P1. A wallpaper group is a topologically discrete group of isometries of the Euclidean plane, i.e. transformations that preserve distance \cite{RN1425}. Wallpaper groups differ in the number and kind of these transformations. In mathematical group theory, when the elements of one group is completely contained in another, the inner group is called a subgroup of the outer group \cite{RN1425}. Subgroup relationships between wallpaper groups can be distinguished by their indices. The index of a subgroup relationship is the number of cosets, i.e. the number of times the subgroup is found in the outer group \cite{RN1425}. As an example, let us consider groups P6 and P2. If we ignore the translations in two directions that both groups share, group P6 consists of the set of rotations {$0^{\circ}$, $60^{\circ}$, $120^{\circ}$, $180^{\circ}$, $240^{\circ}$, $300^{\circ}$}, in which P2 {$0^{\circ}$, $180^{\circ}$} is contained. P2 is thus a subgroup of P6, and the full P6 set can be generated by every combination of P2 and rotations {$0^{\circ}$, $120^{\circ}$, $240^{\circ}$}. Because P2 is repeated three times in P6, P2 is a subgroup of P6 with index 3 \cite{RN1425}.
 
+
 \begin{figure}%[tbhp]
 \centering
-\includegraphics[width=1\linewidth]{../ac_models_eeg_data/plots/subgroup_comprms_Occ_Odd.png}
+\includegraphics[width=1\linewidth]{../figures/figure1.png}
 \caption{Posterior distributions for the difference in mean RMS EEG response. Colour coding of the text indicates the index of the subgroup, while the colour of the filled distribution relates to the conditional probability that the difference in means is greater than zero. We can see that 55/64 subgroup relationships have $p(\Delta|data)>0.9$.}
 \label{fig:durations_rotations}
 \end{figure}
+
+\begin{figure}%[tbhp]
+\centering
+\includegraphics[width=1\linewidth]{../analysis/plots/subgroup_comprms_Occ_Odd.png}
+\caption{Posterior distributions for the difference in mean RMS EEG response. Colour coding of the text indicates the index of the subgroup, while the colour of the filled distribution relates to the conditional probability that the difference in means is greater than zero. We can see that 55/64 subgroup relationships have $p(\Delta|data)>0.9$.}
+\label{fig:durations_rotations}
+\end{figure}
+
 
 \section*{Discussion}
 

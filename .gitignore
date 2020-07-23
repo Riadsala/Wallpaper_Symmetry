@@ -10,4 +10,5 @@
 *.RData
 *.rdb
 *.rdx
+~*
 analysis/.Rhistory
