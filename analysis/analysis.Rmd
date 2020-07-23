@@ -510,6 +510,8 @@ df %>% gather("measurement", "number", -p) %>%
   theme_minimal() + ggthemes::scale_color_ptol(labels = c("primary EEG", "sensor control EEG", "harmonic control EEG", "psychophysical threshold")) +
   scale_y_continuous(limits = c(0, 1)) +
   xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
+
+ggsave("plots/model_roc_style.pdf", height = 5, width = 8)
 ```
 
 If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/63 = 89% and 49/64 = 78% of the comparisons for the primary EEG and display durations repectively. This compares to the 32/64= 50% and 22/64 = 35% for the control EEG conditions. 
