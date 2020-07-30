@@ -200,7 +200,7 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
         geom_line() +       
         geom_density_ridges(colour = "black", alpha = 0.75, bandwidth = 0.05) +
         ggstance::geom_linerangeh(colour = "black", size = 0.5, aes(y = key, xmin= -5, xmax= 5)) + 
-        scale_x_continuous('pdf for difference between subgroups', expand = c(0,0), breaks = seq(-2, 1, 0.5)) +
+        scale_x_continuous('pdf for subgroup difference', expand = c(0,0), breaks = seq(-2, 1, 0.5)) +
         scale_y_discrete(labels = function(x) TeX(levels(d$key))) + #labels = lapply(levels(subgroup_comp$key), TeX)
         theme_minimal() +        
         ggthemes::scale_colour_ptol(drop = FALSE) +
@@ -210,7 +210,7 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
             face = if_else(l$normal==0, "bold", "plain"),
             colour = l$lab_cols),
             axis.title.y = element_blank(),
-            plot.margin=unit(c(0,0,0,0),"cm"))  
+            plot.margin=unit(c(0,0.25,0,0.25),"cm"))  
        
      if (is_thresholds) {
         plt <- plt + coord_cartesian((xlim = c(-2.2, 0.7))) + 
@@ -221,9 +221,9 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
     }
 
     if (fig_n == 1) {
-        plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank()))
+        plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank(), nrow = 2))
     } else {
-        plt <- plt + guides(fill = FALSE, colour = guide_legend(title.postion = "top"))
+        plt <- plt + guides(fill = FALSE, colour = guide_legend(title.postion = "top", nrow = 2))
     }
 
     
