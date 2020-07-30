@@ -210,7 +210,7 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
             face = if_else(l$normal==0, "bold", "plain"),
             colour = l$lab_cols),
             axis.title.y = element_blank(),
-            plot.margin=unit(c(1,1,1.5,1.2),"cm"))  
+            plot.margin=unit(c(0,0,0,0),"cm"))  
        
      if (is_thresholds) {
         plt <- plt + coord_cartesian((xlim = c(-2.2, 0.7))) + 
