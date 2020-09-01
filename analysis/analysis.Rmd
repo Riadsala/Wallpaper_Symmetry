@@ -325,7 +325,6 @@ my_models$par_odd <- get_model_predictions(my_samples$par_odd)
 plt1 <- plot_model_output(my_models$par_odd, d_eeg_par_odd, 
                   "odd-harmonic data from \nparietal electrodes", "orangered3", "threshold (ms)")
 
-
 m_eeg_occ_even <- brm(data = d_eeg_occ_even, 
                       rms ~ wg-1 + (1|subject),
                       family = "lognormal", 
@@ -356,7 +355,7 @@ subgroup_comp$par_odd  <- get_subgroup_comparisons2(my_samples$par_odd)
 
 ## Primary EEG Data
 
-Finally, we calculate the probability that the RMS difference between subgroup and supergroup is larger than zero given the data. This information is then binned so we can colour in the posterior density plots.
+Finally, we calculate the probability that the RMS difference between subgroup and super-group is larger than zero given the data. This information is then binned so we can colour in the posterior density plots.
 
 ```{r define_comparison_summary_function}
 
@@ -380,7 +379,7 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
 
 Now we will use it!
   
-```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
+```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
 # compute probabilties
 comp_summary$eeg <- comparison_summary(subgroup_comp$eeg, TRUE, 'rms')
@@ -410,7 +409,7 @@ ggsave("plots/subgroup_comp_eeg_rms.png", width = 5.5, height = 8)
 
 We can do the same for the display duration thresholds from our psychophysics experiment. Here we are looking for the opposite effect, namely that display larger are larger for subgroups than for supergroups (see main paper), so we calculate the probability that differences in duration are smaller than zero. 
 
-```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero."}
+```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero.", warning=FALSE}
 
 # compute probabilties
 comp_summary$threshold <- comparison_summary(subgroup_comp$threshold, FALSE, 'threshold')
@@ -440,7 +439,7 @@ ggsave("plots/subgroup_comp_psychophysical.png",  width = 5.5, height = 8)
 
 We will now do exactly the same with the control data (odd harmonic data from parietal electrodes and even harmonic data from occipital electrodes)
 
-```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero."}
+```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
 # compute probabilties
 comp_summary$occ_even <- comparison_summary(subgroup_comp$occ_even, TRUE, 'rms') 
