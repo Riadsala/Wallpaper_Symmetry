@@ -28,6 +28,8 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
 {
     d$key <- fct_drop(d$key)
     l$key <- fct_drop(l$key)
+    
+    x_labels <- expression()
 
     prob_relation <- mean(d$value)
 
