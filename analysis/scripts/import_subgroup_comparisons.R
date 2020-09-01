@@ -1,6 +1,5 @@
 library(tidyverse)
 
-
 index_dat  <- read_csv("../subgroups/subgroup_relations.csv")
 normal_dat <- read_csv("../subgroups/subgroup_normal.csv")
 
@@ -30,7 +29,6 @@ for (ii in 1:nrow(index_dat)) {
             normal = normal_dat[ii,jj] == 1)
     }
 } 
-
 
 # list of comparisons to remove
 to_remove <- list(
@@ -71,4 +69,4 @@ subgroups %>% filter(
     is.finite(index),
     group != subgroup,
     !(paste(group, subgroup, sep="-") %in% to_remove)) %>%
-    mutate(label = paste(group, "$\\rightarrow$", subgroup)) -> subgroups
+    mutate(label = paste(group, "% -> %", subgroup)) -> subgroups

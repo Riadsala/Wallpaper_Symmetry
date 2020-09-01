@@ -24,165 +24,6 @@ get_subgroup_comparisons2 <- function(m_samples, n_iter) {
   return(subgroup_comp)
 }
 
-get_subgroup_comparisons <- function(m_samples, n_iter)
-{
-    m_samples %>%
-      as_tibble() %>% 
-      mutate_all(exp) %>%
-      mutate(
-        'P4M$\\rightarrow$ P4G' = P4M - P4G,
-        'P4M$\\rightarrow$ P4'  = P4M - P4,
-        'P4M$\\rightarrow$ CMM' = P4M - CMM,
-        'P4M$\\rightarrow$ PMM' = P4M - PMM, 
-        'P6M$\\rightarrow$ P6' = P6M - P6,
-        'P6M$\\rightarrow$ P31M' = P6M - P31M,
-        'P6M$\\rightarrow$ P3M1' = P6M - P3M1,
-        'PMM$\\rightarrow$ PMG' = PMM - PMG,
-        'PMM$\\rightarrow$ PM' = PMM - PM,
-        'PMM$\\rightarrow$ P2' = PMM - P2,
-        'P3M1$\\rightarrow$ P3'= P3M1- P3,
-        'CMM$\\rightarrow$ PMG' = CMM - PMG,
-        'CMM$\\rightarrow$ PGG' = CMM - PGG,
-        'CMM$\\rightarrow$ CM' = CMM - CM,
-        'CMM$\\rightarrow$ P2' = CMM - P2,
-        'P4G$\\rightarrow$ P4' = P4G - P4,
-        'P4G$\\rightarrow$ CMM' = P4G - CMM,
-        'P4G$\\rightarrow$ PGG' = P4G - PGG,
-        'PMG$\\rightarrow$ PGG' = PMG - PGG, 
-        'PMG$\\rightarrow$ PM' = PMG - PM,
-        'PMG$\\rightarrow$ PG' = PMG - PG,
-        'PMG$\\rightarrow$ P2' = PMG - P2,
-        'P31M$\\rightarrow$ P3'= P31M- P3,
-        'P6$\\rightarrow$ P3'  = P6  - P3,
-        'CM$\\rightarrow$ PG'  = CM  - PG,
-        'P4$\\rightarrow$ P2'  = P4  - P2,
-        'PM$\\rightarrow$ PG'  = PM  - PG, 
-        'PGG$\\rightarrow$ PG' = PGG - PG, 
-        'PGG$\\rightarrow$ P2' = PGG - P2, 
-        # 'P2$\\rightarrow$ PG'  = P2 - PG,
-        'P6M$\\rightarrow$ CMM' = P6M - CMM,
-        'P3M1$\\rightarrow$ CM' = P3M1 - CM,
-        'P31M$\\rightarrow$ CM' = P31M - CM,
-        'P6$\\rightarrow$ P2' = P6 - P2,
-        'P4M$\\rightarrow$ PMG' = P4M - PMG,
-        'P4M$\\rightarrow$ PGG' = P4M - PGG,
-        'P4M$\\rightarrow$ CM' = P4M - CM,
-        'P4M$\\rightarrow$ PM' = P4M - PM,
-        'P4M$\\rightarrow$ P2' = P4M - P2,
-        'P6M$\\rightarrow$ P3' = P6M - P3,
-        'PMM$\\rightarrow$ PGG' = PMM - PGG,
-        'PMM$\\rightarrow$ CM' = PMM -CM, 
-        'PMM$\\rightarrow$ PG' = PMM -PG,
-        'CMM$\\rightarrow$ PM' = CMM - PM,
-        'CMM$\\rightarrow$ PG' = CMM - PG,
-        'P4G$\\rightarrow$ PMM' = P4G - PMM,
-        'P4G$\\rightarrow$ PMG' = P4G - PMG,
-        'P4G$\\rightarrow$ CM' = P4G - CM,
-        'P4G$\\rightarrow$ PG' = P4G - PG,
-        'P4G$\\rightarrow$ P2' = P4G - P2,
-        'PMG$\\rightarrow$ CM' = PMG - CM,
-        'P6M$\\rightarrow$ PMM' = P6M - PMM,
-        'P6M$\\rightarrow$ PMG' = P6M - PMG,
-        'P6M$\\rightarrow$ PGG' = P6M - PGG,
-        'P6M$\\rightarrow$ CM' = P6M - CM,
-        'P6M$\\rightarrow$ P2' = P6M - P2,
-        'P3M1$\\rightarrow$ PM' = P3M1 - PM,
-        'P3M1$\\rightarrow$ PG' = P3M1 - PG,
-        'P31M$\\rightarrow$ PM' = P31M - PM,
-        'P31M$\\rightarrow$ PG' = P31M - PG,
-        'P4G$\\rightarrow$ PM' = P4G - PM,
-        'P4M$\\rightarrow$ PG' = P4M - PG,
-        'P6M$\\rightarrow$ PG' = P6M - PG,
-        'P6M$\\rightarrow$ PM' = P6M - PM
-      ) %>%
-      select(
-        'P4M$\\rightarrow$ P4G',
-        'P4M$\\rightarrow$ P4',  
-        'P4M$\\rightarrow$ CMM', 
-        'P4M$\\rightarrow$ PMM',
-        'P6M$\\rightarrow$ P6', 
-        'P6M$\\rightarrow$ P31M', 
-        'P6M$\\rightarrow$ P3M1',
-        'PMM$\\rightarrow$ PMG', 
-        'PMM$\\rightarrow$ PM', 
-        'PMM$\\rightarrow$ P2', 
-        'P3M1$\\rightarrow$ P3',
-        'CMM$\\rightarrow$ PMG', 
-        'CMM$\\rightarrow$ PGG', 
-        'CMM$\\rightarrow$ CM', 
-        'CMM$\\rightarrow$ P2',
-        'P4G$\\rightarrow$ P4', 
-        'P4G$\\rightarrow$ CMM', 
-        'P4G$\\rightarrow$ PGG',
-        'PMG$\\rightarrow$ PGG', 
-        'PMG$\\rightarrow$ PM', 
-        'PMG$\\rightarrow$ PG', 
-        'PMG$\\rightarrow$ P2', 
-        'P31M$\\rightarrow$ P3',
-        'P6$\\rightarrow$ P3',  
-        'CM$\\rightarrow$ PG',  
-        'P4$\\rightarrow$ P2',  
-        'PM$\\rightarrow$ PG',  
-        'PGG$\\rightarrow$ PG', 
-        'PGG$\\rightarrow$ P2', 
-        # 'P2$\\rightarrow$ PG' ,
-        'P6M$\\rightarrow$ CMM', 
-        'P3M1$\\rightarrow$ CM' ,
-        'P31M$\\rightarrow$ CM' ,
-        'P6$\\rightarrow$ P2' ,
-        'P4M$\\rightarrow$ PMG' ,
-        'P4M$\\rightarrow$ PGG' ,
-        'P4M$\\rightarrow$ CM' ,
-        'P4M$\\rightarrow$ PM' ,
-        'P4M$\\rightarrow$ P2' ,
-        'P6M$\\rightarrow$ P3' ,
-        'PMM$\\rightarrow$ PGG' ,
-        'PMM$\\rightarrow$ CM' ,
-        'PMM$\\rightarrow$ PG' ,
-        'CMM$\\rightarrow$ PM' ,
-        'CMM$\\rightarrow$ PG' ,
-        'P4G$\\rightarrow$ PMM' ,
-        'P4G$\\rightarrow$ PMG' ,
-        'P4G$\\rightarrow$ CM' ,
-        'P4G$\\rightarrow$ PG' ,
-        'P4G$\\rightarrow$ P2' ,
-        'PMG$\\rightarrow$ CM' ,
-        'P6M$\\rightarrow$ PMM' ,
-        'P6M$\\rightarrow$ PMG' ,
-        'P6M$\\rightarrow$ PGG' ,
-        'P6M$\\rightarrow$ CM' ,
-        'P6M$\\rightarrow$ P2' ,
-        'P3M1$\\rightarrow$ PM' ,
-        'P3M1$\\rightarrow$ PG' ,
-        'P31M$\\rightarrow$ PM' ,
-        'P31M$\\rightarrow$ PG' ,
-        'P4G$\\rightarrow$ PM',
-        'P4M$\\rightarrow$ PG',
-        'P6M$\\rightarrow$ PG',
-        'P6M$\\rightarrow$ PM'
-      ) %>%
-      gather() %>%
-      mutate(
-        index = as.factor(c(
-          rep(2, n_iter * 29), 
-          rep(3, n_iter * 4), 
-          rep(4, n_iter * 17), 
-          rep(6, n_iter * 9),
-          rep(8, n_iter * 2),
-          rep(12,n_iter * 2))),
-        normal = c(
-          rep(1, n_iter * 29), 
-          rep(c(0, 0, 0, 1), each = n_iter), 
-          rep(c(0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0), each = n_iter),
-          rep(c(0, 0, 0, 0, 1, 0, 0, 0, 0), each = n_iter),
-          rep(c(0, 0, 0, 0), each = n_iter)),
-        key = as_factor(key),
-        key = fct_rev(key)) -> subgroup_comp
-
-    return(subgroup_comp)
-
-}
-
 plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE) 
 {
     d$key <- fct_drop(d$key)
@@ -201,13 +42,13 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
         geom_density_ridges(colour = "black", alpha = 0.75, bandwidth = 0.05) +
         ggstance::geom_linerangeh(colour = "black", size = 0.5, aes(y = key, xmin= -5, xmax= 5)) + 
         scale_x_continuous('pdf for subgroup difference', expand = c(0,0), breaks = seq(-2, 1, 0.5)) +
-        scale_y_discrete(labels = function(x) TeX(levels(d$key))) + #labels = lapply(levels(subgroup_comp$key), TeX)
+        scale_y_discrete(labels = levels(d$key)) + #labels = lapply(levels(subgroup_comp$key), TeX)
         theme_minimal() +        
         ggthemes::scale_colour_ptol(drop = FALSE) +
         theme(
             legend.position = 'bottom',
             axis.text.y = element_text(
-            face = if_else(l$normal==0, "bold", "plain"),
+            face = "italic", #if_else(l$normal==0, "italic", "plain"),
             colour = l$lab_cols),
             axis.title.y = element_blank(),
             plot.margin=unit(c(0,0.25,0,0.25),"cm"))  

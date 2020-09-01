@@ -87,9 +87,11 @@ d_eeg %>% ggplot(aes(x = rms)) +
 The table below shows how many groups per participant we have data for. 
 
 ```{r}
-d_eeg %>% group_by(subject) %>% summarise(count = n()) %>% knitr::kable()
+d_eeg %>% group_by(subject) %>% 
+  summarise(count = n()) %>% 
+  knitr::kable() %>% 
+  kableExtra::kable_styling(full_width = F)
 ```
-                                                 
 
 ## Threshold Data
 
@@ -113,7 +115,6 @@ read_csv("../Experiment/process_results/thresholds.csv", col_types = my_cols_thr
 rm(my_cols_threshold)
 ```
 
-
 As above, a summary of the data. And again, we have a skewed distribution, (with negative display durations being impossible), so we will use also use a `lognormal` distribution to model the behaviour data. 
 
 ```{r, fig.cap="Histogram of the display duration thresholds."}
@@ -121,7 +122,6 @@ d_dispthresh %>% ggplot(aes(x = threshold)) +
     geom_histogram(binwidth = 0.2, fill = "skyblue", colour = "black") +
     theme_lucid()
 ```
-
 
 The table below shows how many groups per participant we have data for. 
 
@@ -312,7 +312,7 @@ summary(m_threshold)
 
 We will also fit models to the control data. As we can see from Figure 2.4, the group differences are much smaller. 
 
-```{r fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals.", cache=TRUE}
+```{r fig.cap="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals.", cache=TRUE, warning=FALSE}
 
 m_eeg_par_odd <- brm(data = d_eeg_par_odd, 
                      rms ~ wg-1 + (1|subject),
@@ -503,7 +503,7 @@ for (p in seq(0.5, 0.99, 0.01)) {
 
 df$p <- seq(0.5, 0.99, 0.01)
 
-filter(df, p == 0.95)
+filter(df, p == 0.95) %>% knitr::kable() %>% kableExtra::kable_styling(full_width = F)
 
 df %>% gather("measurement", "number", -p) %>%
   mutate(proportion = number/nrow(subgroups)) %>%
@@ -554,14 +554,13 @@ summary(m_disp_rot)
 d_disp_rot %>% modelr::data_grid(orientation) %>%
   add_fitted_draws(m_disp_rot, re_formula = NA, n=200) %>%
   ggplot() + 
-  geom_line(data = d_disp_rot, aes(x = orientation, y = threshold, group = subject), alpha = 0.1, colour = "darkred") +
+  geom_line(data = d_disp_rot, aes(x = orientation, y = threshold, group = subject), alpha = 0.1, colour = "red") +
   geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
   theme_minimal() -> p2
 ```
 
-```{r}
+```{r rotations-replication, fig.cap="Red lines show empirical data, blue lines show the model fit."}
 p1 + p2
-
 ```
 
 ## Index and Normality 
