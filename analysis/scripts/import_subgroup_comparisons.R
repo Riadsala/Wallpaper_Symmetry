@@ -69,4 +69,4 @@ subgroups %>% filter(
     is.finite(index),
     group != subgroup,
     !(paste(group, subgroup, sep="-") %in% to_remove)) %>%
-    mutate(label = paste(group, "->", subgroup)) -> subgroups
+    mutate(label = paste(group, "≤", subgroup)) -> subgroups

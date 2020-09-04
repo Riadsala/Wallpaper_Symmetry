@@ -84,15 +84,6 @@ d_eeg %>% ggplot(aes(x = rms)) +
     theme_lucid()
 ```
                                                  
-The table below shows how many groups per participant we have data for. 
-
-```{r}
-d_eeg %>% group_by(subject) %>% 
-  summarise(count = n()) %>% 
-  knitr::kable() %>% 
-  kableExtra::kable_styling(full_width = F)
-```
-
 ## Threshold Data
 
 Here we import that data and select the columns that we're interested in. Threshold gives the required display duration (in seconds) for the two stimuli to allow for accurate discrimination. 
@@ -126,7 +117,11 @@ d_dispthresh %>% ggplot(aes(x = threshold)) +
 The table below shows how many groups per participant we have data for. 
 
 ```{r}
-d_dispthresh %>% group_by(subject) %>% summarise(count = n()) %>% knitr::kable()
+d_dispthresh %>% 
+  group_by(subject) %>% 
+  summarise(count = n()) %>% 
+  knitr::kable() %>% 
+  kableExtra::kable_styling(full_width = F)
 ```
 
 ## Control Data
@@ -168,7 +163,7 @@ knitr::kable(sym_dat, caption = "wallpaper group summary") %>%
 ```
 
 ### Subgroup Relationships
-Import subgroup information and display a table of the relationships that we will be investigating.
+Import subgroup information and display a table of the relationships that we will be investigating. Relationships taken from Coxeter & Moser (1972).
 
 ```{r}
 source("scripts/import_subgroup_comparisons.R")
@@ -377,8 +372,6 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
 }
 ```
 
-Now we will use it!
-  
 ```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
 # compute probabilties
@@ -521,40 +514,41 @@ If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are p
 
 # Additional Analysis
 
-## Replicatation of Kohler et al (2016)
+## Replication of Kohler et al (2016)
 
-We can look at the groups that only contain orientation, and see if we obtain the parametric response as documented in Kohler et al. (2016). We will also investigate if we see the corresponding pattern with the display duration threshold data, with the time taken to detect the symmetry dreasing as we increase the amount of rotational symmetry.
-
+We can look at the groups that only contain rotations, and see if we obtain the parametric response as documented in Kohler et al. (2016).
 
 ```{r, cache = TRUE}
 d_eeg %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>%
-  mutate(orientation = parse_number(wg))-> d_eeg_rot 
+  mutate(rotation = parse_number(wg))-> d_eeg_rot 
 
-
-m_eeg_rot <- brm(data = d_eeg_rot, rms ~ orientation + (1|subject), family = "lognormal")
+m_eeg_rot <- brm(data = d_eeg_rot, rms ~ rotation + (1|subject), family = "lognormal")
 
 summary(m_eeg_rot)
 
-d_eeg_rot %>% modelr::data_grid(orientation) %>%
+d_eeg_rot %>% modelr::data_grid(rotation) %>%
   add_fitted_draws(m_eeg_rot, re_formula = NA, n=200) %>%
   ggplot() + 
-  geom_line(data = d_eeg_rot, aes(x = orientation, y = rms, group = subject), alpha = 0.1, colour = "darkred") +
-  geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
+  geom_line(data = d_eeg_rot, aes(x = rotation, y = rms, group = subject), alpha = 0.1, colour = "darkred") +
+  geom_path(aes(x = rotation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
   theme_minimal() -> p1
 ```
+
+We will also investigate if we see the corresponding pattern with the display duration threshold data, with the time taken to detect the symmetry dreasing as we increase the amount of rotational symmetry.
+ 
 ```{r, cache = TRUE}
 d_dispthresh %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>%
-  mutate(orientation = parse_number(wg))-> d_disp_rot 
+  mutate(rotation = parse_number(wg))-> d_disp_rot 
 
-m_disp_rot <- brm(data = d_disp_rot, threshold ~ orientation + (1|subject), family = "lognormal")
+m_disp_rot <- brm(data = d_disp_rot, threshold ~ rotation + (1|subject), family = "lognormal")
 
 summary(m_disp_rot)
 
-d_disp_rot %>% modelr::data_grid(orientation) %>%
+d_disp_rot %>% modelr::data_grid(rotation) %>%
   add_fitted_draws(m_disp_rot, re_formula = NA, n=200) %>%
   ggplot() + 
-  geom_line(data = d_disp_rot, aes(x = orientation, y = threshold, group = subject), alpha = 0.1, colour = "red") +
-  geom_path(aes(x = orientation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
+  geom_line(data = d_disp_rot, aes(x = rotation, y = threshold, group = subject), alpha = 0.1, colour = "red") +
+  geom_path(aes(x = rotation, y = .value, group = .draw), alpha = .1, colour = "royalblue2") + 
   theme_minimal() -> p2
 ```
 
@@ -580,8 +574,7 @@ comp_summary$eeg %>% ungroup() %>%
  
 my_models$eeg <- brm(data = comp_summary$eeg, mean_value ~ index * normal)
 
-
-
+summary(my_models$eeg)
 ```
 
 And now for the display duration thresholds.
@@ -598,8 +591,16 @@ comp_summary$threshold %>% ungroup() %>%
 my_models$disp <- brm(data = comp_summary$threshold, mean_value ~ index * normal)
 
 summary(my_models$disp)
+```
+
+It is unclear from the above summary tables whether either variable has a clear effect. We can use leave-one-out metrics to compare models.
+
+```{r}
+summary(lm(data = comp_summary$threshold, mean_value ~ index * normal))
+summary(lm(data = comp_summary$eeg, mean_value ~ index * normal))
 
 ```
+
 
 We can see that the index of the subgroup relationship has an effect on both the difference in log(rms) and the difference in log(display duration): relationships with a higher index lead to larger differences. 
 
@@ -646,7 +647,6 @@ m <- brm(data = d, threshold ~ rms)
 bR2 <- bayes_R2(m)
 
 print(bR2)
-
 ```
 
 We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, 95\% credible interval is `r round(bR2[3],2)` - `r round(bR2[4], 2)`). 
@@ -661,7 +661,6 @@ d %>%
   geom_point(data = d) +
   theme_minimal() +
   ggthemes::scale_colour_ptol("index")
-
 ```
 
 
