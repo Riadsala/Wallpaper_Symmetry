@@ -47,11 +47,11 @@ subgroup_comp <- list()
 
 Here we import our data and make some summary plots.
 
-## EEG Data
+## SSVEP Data
 
-Importing the primary EEG data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
+Importing the primary SSVEP data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
 
-```{r, fig.cap = "RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
+```{r, fig.cap = "SSVEP RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
 plt <- cowplot::ggdraw() +
   cowplot::draw_image("../figures/occTopo_merged.png")
 print(plt)
@@ -126,7 +126,7 @@ d_dispthresh %>%
 
 ## Control Data
 
-In addition to the primary EEG data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
+In addition to the primary SSVEP data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
 
 ```{r import_control}
 
@@ -185,7 +185,7 @@ Here are the details of the Bayesian multi-level modelling. Our general approach
   + maximal random effect structure.
 * Check model fit (r̂ statistics and trace plots).
 * Extract mcmc samples from the posterior distributions.
-* Use these samples to estimate the difference between sub- and super-groups.
+* Use these samples to estimate the difference between sub- and supergroups.
 
 ## Define Priors
 
@@ -244,7 +244,7 @@ We can see that i) our priors are relatively weak as the predictions span severa
 
 ## Compute Posterior 
 
-### Fit Model to EEG Data
+### Fit Model to SSVEP Data
 
 We will now fit the model to the data.
 
@@ -337,7 +337,7 @@ plt1 + plt2 + plot_annotation(title = 'Model Fits for the ')
 
 # Subgroup Comparisons
 
-We will now compute the difference between sub- and super-groups. 
+We will now compute the difference between sub- and supergroups. 
   
 ```{r subgroup_comparisons}
 source("scripts/get_subgroup_comparisons.R")
@@ -348,9 +348,9 @@ subgroup_comp$occ_even <- get_subgroup_comparisons2(my_samples$occ_even)
 subgroup_comp$par_odd  <- get_subgroup_comparisons2(my_samples$par_odd)
 ```
 
-## Primary EEG Data
+## Primary SSVEP Data
 
-Finally, we calculate the probability that the RMS difference between subgroup and super-group is larger than zero given the data. This information is then binned so we can colour in the posterior density plots.
+Finally, we calculate the probability that the SSVEP RMS difference between subgroup and supergroup is larger than zero given the data. This information is then binned so we can colour in the posterior density plots.
 
 ```{r define_comparison_summary_function}
 
@@ -372,7 +372,7 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
 }
 ```
 
-```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
+```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and supergroups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
 # compute probabilties
 comp_summary$eeg <- comparison_summary(subgroup_comp$eeg, TRUE, 'rms')
@@ -402,7 +402,7 @@ ggsave("plots/subgroup_comp_eeg_rms.png", width = 5.5, height = 8)
 
 We can do the same for the display duration thresholds from our psychophysics experiment. Here we are looking for the opposite effect, namely that display larger are larger for subgroups than for supergroups (see main paper), so we calculate the probability that differences in duration are smaller than zero. 
 
-```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero.", warning=FALSE}
+```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and supergroups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero.", warning=FALSE}
 
 # compute probabilties
 comp_summary$threshold <- comparison_summary(subgroup_comp$threshold, FALSE, 'threshold')
@@ -428,11 +428,11 @@ both_plts
 ggsave("plots/subgroup_comp_psychophysical.png",  width = 5.5, height = 8)
 ```
 
-## Control EEG Data
+## Control SSVEP Data
 
 We will now do exactly the same with the control data (odd harmonic data from parietal electrodes and even harmonic data from occipital electrodes)
 
-```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and super-groups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
+```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and supergroups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
 # compute probabilties
 comp_summary$occ_even <- comparison_summary(subgroup_comp$occ_even, TRUE, 'rms') 
@@ -502,7 +502,7 @@ df %>% gather("measurement", "number", -p) %>%
   ggplot(aes(x = p, y = proportion, colour = measurement)) + 
   geom_path(size = 1.5) +
   theme_minimal() + 
-  ggthemes::scale_color_ptol(labels = c("primary EEG", "sensor control EEG", "harmonic control EEG", "psychophysical threshold")) +
+  ggthemes::scale_color_ptol(labels = c("primary SSVEP", "sensor control SSVEP", "harmonic control SSVEP", "psychophysical threshold")) +
   theme(legend.justification=c(0,0), legend.position=c(0,0), legend.background = element_rect()) +
   scale_y_continuous(limits = c(0, 1)) +
   xlab("probability of difference given data") + ylab("proportion of subgroup comparisons")
@@ -510,7 +510,7 @@ df %>% gather("measurement", "number", -p) %>%
 ggsave("plots/model_roc_style.pdf", height = 4, width = 4)
 ```
 
-If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/63 = 89% and 49/64 = 78% of the comparisons for the primary EEG and display durations repectively. This compares to the 32/64= 50% and 22/64 = 35% for the control EEG conditions. 
+If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/63 = 89% and 49/64 = 78% of the comparisons for the primary SSVEP and display durations repectively. This compares to the 32/64= 50% and 22/64 = 35% for the control SSVEP conditions. 
 
 # Additional Analysis
 
@@ -560,7 +560,7 @@ p1 + p2
 
 Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
 
-First of all, we run for the eeg rms data. 
+First of all, we run for the SSVEP RMS data. 
 
 ```{r, cache=TRUE}
 
@@ -632,9 +632,9 @@ comp_summary$threshold %>%
    theme(panel.grid.minor = element_blank(), legend.title = element_blank()) 
 ```
 
-## Correlation Between Primary EEG data and Psychophysical Thresholds
+## Correlation Between Primary SSVEP data and Psychophysical Thresholds
 
-Finally, we will investigate whether there is a correlation between the our primary EEG measure (rms amplitude of odd harmonics over occipital cortex) and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted values of the two measures. 
+Finally, we will investigate whether there is a correlation between the our primary SSVEP measure (RMS amplitude of odd harmonics over occipital cortex) and our display duration thresholds. As our two different measures come from different samples of participants, we are unable to do a direct comparison. However, we can use the results of the models discussed in Section 3 and check for a correlation between the predicted values of the two measures. 
 
 ```{r compare_comparisons, cache=TRUE}
 bind_rows(
