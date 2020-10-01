@@ -151,7 +151,7 @@ Information on the symmetries and subgroups contained within each wallpaper grou
 
 ### Types of Symmetry
 
-<A short note on what is counted...i.e., so the reader understands that P2 has one rotation of order 2, etc>
+The following table lists the non-translational isometries in the 17 wallpaper groups. Isometries are listed up to conjugacy, meaning for instance that two identical rotations about different points are not counted separately, and nor are two reflections about lines which differ by a translation in the wallpaper group.
 
 ```{r, fig.cap = "Symmetries present in each group."}
 
