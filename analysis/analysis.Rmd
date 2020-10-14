@@ -119,7 +119,7 @@ The table below shows how many groups per participant we have data for.
 ```{r}
 d_dispthresh %>% 
   group_by(subject) %>% 
-  summarise(count = n()) %>% 
+  summarise(count = n(), .groups = "drop") %>% 
   knitr::kable() %>% 
   kableExtra::kable_styling(full_width = F)
 ```
@@ -360,7 +360,8 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
     group_by(key, index, normal) %>%
     summarise(
       mean_value = mean(value),
-      prob_one_tailed = if_else(greater == TRUE, mean(value > 0), mean(value < 0)))  %>%
+      prob_one_tailed = if_else(greater == TRUE, mean(value > 0), mean(value < 0)),
+      .groups = "drop")  %>%
     mutate(
       prob_one_tailed = if_else(prob_one_tailed==0, 0.01, prob_one_tailed),
       measurement = measurement_lab,
@@ -593,13 +594,11 @@ my_models$disp <- brm(data = comp_summary$threshold, mean_value ~ index * normal
 summary(my_models$disp)
 ```
 
-It is unclear from the above summary tables whether either variable has a clear effect. We can use leave-one-out metrics to compare models.
+It is unclear from the above summary tables whether either variable has a clear effect. 
 
-```{r}
-summary(lm(data = comp_summary$threshold, mean_value ~ index * normal))
-summary(lm(data = comp_summary$eeg, mean_value ~ index * normal))
 
-```
+
+
 
 
 We can see that the index of the subgroup relationship has an effect on both the difference in log(rms) and the difference in log(display duration): relationships with a higher index lead to larger differences. 
