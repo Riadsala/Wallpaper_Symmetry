@@ -173,7 +173,7 @@ opts <- options(knitr.kable.NA = "")
 knitr::kable(index_table, caption = "Summary of subgroup relationships. The numbers indicate the index of the subgroup, while italics indicate normal subgroups. Relationships written in yellow text are not included in our analysis.", escape = "F") %>% kableExtra::kable_styling(full_width = F)
 ```
 
-We will remove identity relationships (i.e., a group is a subgroup of itself) and the three pairs of wallpapers groups that it subgroups of each other (e.g., PM is a subgroup of CM, and CM is a subgroup of PM). This leaves us with a total of `r nrow(subgroups)` subgroups to include in our analysis.
+We will remove identity relationships (i.e., a group is a subgroup of itself) and the three pairs of wallpapers groups that are subgroups of each other (e.g., PM is a subgroup of CM, and CM is a subgroup of PM). This leaves us with a total of `r nrow(subgroups)` subgroups to include in our analysis.
 
 # Bayesian Analysis 
 
@@ -183,7 +183,7 @@ Here are the details of the Bayesian multi-level modelling. Our general approach
 *  Fit a multi-level model using the lognormal distribution.
   + independent variable (wallpaper group) and one dependent variable (rms or threshold).
   + maximal random effect structure.
-* Check model fit (r̂ statistics and trace plots).
+* Check model fit ($r^2$ statistics and trace plots).
 * Extract mcmc samples from the posterior distributions.
 * Use these samples to estimate the difference between sub- and supergroups.
 
@@ -193,7 +193,7 @@ In this section we will specify some priors. We then then use a prior-predictive
 
 ### Fixed Effects
 
-Our independent variable is a categorical factor with 16 levels. We will drop the intercept from our model and instead fit a coefficent for each factor level ($y \sim x - 0$). As our dependant variable will be log-transformed, we can use the priors below: 
+Our independent variable is a categorical factor with 16 levels. We will drop the intercept from our model and instead fit a coefficient for each factor level ($y \sim x - 0$). As our defendant variable will be log-transformed, we can use the priors below: 
 
 ```{r, echo = TRUE}
 prior <- c(
@@ -240,7 +240,7 @@ plt <- p1 + p2
 plt + plot_annotation(title = 'Prior Predictive Checks')
 ```
 
-We can see that i) our priors are relatively weak as the predictions span several orders of magnitide, and ii) our empirical data falls within this range. 
+We can see that i) our priors are relatively weak as the predictions span several orders of magnitude, and ii) our empirical data falls within this range. 
 
 ## Compute Posterior 
 
@@ -355,7 +355,7 @@ Finally, we calculate the probability that the SSVEP RMS difference between subg
 ```{r define_comparison_summary_function}
 
 comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
-  # compute probabilties
+  # compute probabilities
   subgroup_comp_dat %>%
     group_by(key, index, normal) %>%
     summarise(
@@ -375,7 +375,7 @@ comparison_summary <- function(subgroup_comp_dat, greater, measurement_lab) {
 
 ```{r, fig.height=8, fig.cap="Distributions of the difference in mean log(rms) between sub- and supergroups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
-# compute probabilties
+# compute probabilities
 comp_summary$eeg <- comparison_summary(subgroup_comp$eeg, TRUE, 'rms')
 
 subgroup_comp$eeg <- full_join(
@@ -405,7 +405,7 @@ We can do the same for the display duration thresholds from our psychophysics ex
 
 ```{r ,fig.height=8, fig.cap="Distributions of the difference in mean log display duration threshold between sub- and supergroups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being less than zero.", warning=FALSE}
 
-# compute probabilties
+# compute probabilities
 comp_summary$threshold <- comparison_summary(subgroup_comp$threshold, FALSE, 'threshold')
 
 subgroup_comp$threshold <- full_join(
@@ -435,7 +435,7 @@ We will now do exactly the same with the control data (odd harmonic data from pa
 
 ```{r fig.height=8, echo = FALSE, fig.cap="Distributions of the difference in mean log(rms) between sub- and supergroups. The index of each relationship is indicated by the colour of the y-axis label. The fill of the density plots indicated the probability of the difference being greater than zero.", warning=FALSE}
 
-# compute probabilties
+# compute probabilities
 comp_summary$occ_even <- comparison_summary(subgroup_comp$occ_even, TRUE, 'rms') 
 
 subgroup_comp$occ_even <- full_join(
@@ -455,7 +455,7 @@ p2 <- plot_comparisons(
 both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv") 
 both_plts + plot_annotation(title = 'Odd harmonic data from parietal electrodes')
 
-# compute probabilties
+# compute probabilities
 comp_summary$par_odd <- comparison_summary(subgroup_comp$par_odd, TRUE, 'rms') 
 
 subgroup_comp$par_odd <- full_join(
@@ -511,7 +511,7 @@ df %>% gather("measurement", "number", -p) %>%
 ggsave("plots/model_roc_style.pdf", height = 4, width = 4)
 ```
 
-If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/63 = 89% and 49/64 = 78% of the comparisons for the primary SSVEP and display durations repectively. This compares to the 32/64= 50% and 22/64 = 35% for the control SSVEP conditions. 
+If we take $p$=0.95 as our cut-off, we can see that the subgroup relations are preserved in 56/63 = 89% and 49/63 = 78% of the comparisons for the primary SSVEP and display durations respectively. This compares to the 32/63= 51% and 22/63 = 35% for the control SSVEP conditions. 
 
 # Additional Analysis
 
@@ -535,7 +535,7 @@ d_eeg_rot %>% modelr::data_grid(rotation) %>%
   theme_minimal() -> p1
 ```
 
-We will also investigate if we see the corresponding pattern with the display duration threshold data, with the time taken to detect the symmetry dreasing as we increase the amount of rotational symmetry.
+We will also investigate if we see the corresponding pattern with the display duration threshold data, with the time taken to detect the symmetry decreasing as we increase the amount of rotational symmetry.
  
 ```{r, cache = TRUE}
 d_dispthresh %>% filter(wg %in% c("P2", "P3", "P4", "P6")) %>%
