@@ -557,9 +557,9 @@ d_disp_rot %>% modelr::data_grid(rotation) %>%
 p1 + p2
 ```
 
-## Index and Normality 
+## Index
 
-Subgroup relations can be classified by their index, and by whether they are normal or not. Here we investigate the extent to which these two variables can account for the variation between the subgroup relationships. 
+Subgroup relations can be classified by their index. Here we investigate the extent to which index can account for the variation between the subgroup relationships. 
 
 First of all, we run for the SSVEP RMS data. 
 
@@ -570,10 +570,11 @@ my_models <- list()
  
 comp_summary$eeg %>% ungroup() %>%
    mutate(
-     index = as.numeric(as.character(index)),
-     normal = if_else(normal, 1, 0)) -> comp_summary$eeg
+     index = as.numeric(as.character(index))) -> comp_summary$eeg
  
-my_models$eeg <- brm(data = comp_summary$eeg, mean_value ~ index * normal)
+my_models$eeg <- brm(
+  data = comp_summary$eeg, 
+  scale(mean_value) ~ index)
 
 summary(my_models$eeg)
 ```
@@ -586,18 +587,14 @@ And now for the display duration thresholds.
 
 comp_summary$threshold %>% ungroup() %>%
    mutate(
-     index = as.numeric(as.character(index)),
-     normal = if_else(normal, 1, 0)) -> comp_summary$threshold
+     index = as.numeric(as.character(index))) -> comp_summary$threshold
  
-my_models$disp <- brm(data = comp_summary$threshold, mean_value ~ index * normal)
+my_models$disp <- brm(
+  data = comp_summary$threshold, 
+  scale(mean_value) ~ index)
 
 summary(my_models$disp)
 ```
-
-It is unclear from the above summary tables whether either variable has a clear effect. 
-
-
-
 
 
 
