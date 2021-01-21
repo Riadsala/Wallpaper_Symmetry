@@ -574,7 +574,7 @@ comp_summary$eeg %>% ungroup() %>%
  
 my_models$eeg <- brm(
   data = comp_summary$eeg, 
-  scale(mean_value) ~ index)
+  mean_value ~ index)
 
 summary(my_models$eeg)
 ```
@@ -591,16 +591,14 @@ comp_summary$threshold %>% ungroup() %>%
  
 my_models$disp <- brm(
   data = comp_summary$threshold, 
-  scale(mean_value) ~ index)
+  mean_value ~ index)
 
 summary(my_models$disp)
 ```
 
-
-
 We can see that the index of the subgroup relationship has an effect on both the difference in log(rms) and the difference in log(display duration): relationships with a higher index lead to larger differences. 
 
-```{r, fig.cap = "The effect of index and normality on log(rms) and log(ms)."}
+```{r, fig.cap = "The effect of index on log(rms) and log(ms)."}
 comp_summary$eeg %>%
   modelr::data_grid(index, normal) %>%
   add_fitted_draws(my_models$eeg, n = 100) %>%
@@ -615,12 +613,12 @@ comp_summary$threshold %>%
                         comp_summary$eeg %>% mutate(model = "primary eeg"))
  
  bind_rows(d_plt_eeg, d_plt_disp) %>%
-   ggplot(aes(x =  index, y = .value, color = as.factor(normal), group = interaction(.draw, normal))) +
+   ggplot(aes(x =  index, y = .value, group = interaction(.draw, normal))) +
    geom_line(alpha = .15) +
    facet_wrap(~ model, scales="free_y") + 
    geom_jitter(
      data = d_summary, 
-     aes(x =  index, y = mean_value, colour = as.factor(normal), group = 1), width = 0.1, height = 0, alpha = 0.33) +
+     aes(x =  index, y = mean_value, group = 1), width = 0.1, height = 0, alpha = 0.33) +
    theme_minimal() + 
    ggthemes::scale_colour_ptol(labels = c("non-normal", "normal")) + 
    scale_x_continuous("index", breaks = c(2,3,4,6,8,12)) +
