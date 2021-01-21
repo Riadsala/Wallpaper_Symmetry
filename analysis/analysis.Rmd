@@ -45,7 +45,7 @@ comp_summary <- list()
 subgroup_comp <- list()
 ```
 
-Here we import our data and make some summary plots.
+First we import our data and make some summary plots.
 
 ## SSVEP Data
 
@@ -114,19 +114,9 @@ d_dispthresh %>% ggplot(aes(x = threshold)) +
     theme_lucid()
 ```
 
-The table below shows how many groups per participant we have data for. 
-
-```{r}
-d_dispthresh %>% 
-  group_by(subject) %>% 
-  summarise(count = n(), .groups = "drop") %>% 
-  knitr::kable() %>% 
-  kableExtra::kable_styling(full_width = F)
-```
-
 ## Control Data
 
-In addition to the primary SSVEP data set, we are also importing two control data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
+In addition to the primary SSVEP data set, we are also importing two control EEG data sets which are (a) even harmonic data from the same occipital electrodes, and (b) odd harmonic data from six parietal electrodes (see Figure 1.1 and the main paper).
 
 ```{r import_control}
 
@@ -147,7 +137,8 @@ rm(my_cols, fl)
 
 ## Symmetry Information
 
-Information on the symmetries and subgroups contained within each wallpaper group was obtained from <cite> and is summarised in the files `symmeries_in_group.csv`, `subgroup_relations.csv`, and `subgroup_normal.csv`.
+Information on the symmetries and subgroups contained within each wallpaper group was obtained from Coxeter & Moses (1980, Generators and Relations
+for Discrete Groups) and is summarised in the files `symmeries_in_group.csv`, `subgroup_relations.csv`, and `subgroup_normal.csv`.
 
 ### Types of Symmetry
 
@@ -158,7 +149,7 @@ The following table lists the non-translational isometries in the 17 wallpaper g
 sym_dat <- read_csv("../subgroups/symmeries_in_group.csv") %>%
   mutate(group = str_to_upper(group))
 
-knitr::kable(sym_dat, caption = "wallpaper group summary") %>% 
+knitr::kable(sym_dat, caption = "Wallpaper group summary") %>% 
     kableExtra::kable_styling(full_width = F)
 ```
 
@@ -183,7 +174,6 @@ Here are the details of the Bayesian multi-level modelling. Our general approach
 *  Fit a multi-level model using the lognormal distribution.
   + independent variable (wallpaper group) and one dependent variable (rms or threshold).
   + maximal random effect structure.
-* Check model fit ($r^2$ statistics and trace plots).
 * Extract mcmc samples from the posterior distributions.
 * Use these samples to estimate the difference between sub- and supergroups.
 
@@ -193,7 +183,7 @@ In this section we will specify some priors. We then then use a prior-predictive
 
 ### Fixed Effects
 
-Our independent variable is a categorical factor with 16 levels. We will drop the intercept from our model and instead fit a coefficient for each factor level ($y \sim x - 0$). As our defendant variable will be log-transformed, we can use the priors below: 
+Our independent variable is a categorical factor with 16 levels. We will drop the intercept from our model and instead fit a coefficient for each factor level ($y \sim x - 0$). As our dependent variable will be log-transformed, we can use the priors below: 
 
 ```{r, echo = TRUE}
 prior <- c(
@@ -255,6 +245,7 @@ m_eeg <- brm(data = d_eeg,
              prior = prior, iter = n_iter,
              control = list(adapt_delta = 0.99))
 
+
 summary(m_eeg)
 
 # Also fit to display duration data so I can display both models together
@@ -265,6 +256,8 @@ m_threshold <- brm(data = d_dispthresh,
                    prior = prior, iter = n_iter,
                    control = list(adapt_delta = 0.99))
 ```
+
+
 
 We will now look at the model's predicts for the average participant (i.e, ignoring the random intercepts). 
 
@@ -656,7 +649,6 @@ d %>%
   theme_minimal() +
   ggthemes::scale_colour_ptol("index")
 ```
-
 
 # Package and Session Information
 
