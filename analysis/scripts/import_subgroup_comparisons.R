@@ -50,7 +50,7 @@ subgroups %>%
     left_join(subgroups) %>%
     mutate(
         colour_code = if_else(paste(group, subgroup, sep="-") %in% to_remove, 2, 1), 
-       index = as.character(index),
+        index = as.character(index),
         index = if_else(is.na(index), "-", index),
         index = kableExtra::cell_spec(
              index, 
@@ -69,4 +69,4 @@ subgroups %>% filter(
     is.finite(index),
     group != subgroup,
     !(paste(group, subgroup, sep="-") %in% to_remove)) %>%
-    mutate(label = paste(group, "≤", subgroup)) -> subgroups
+    mutate(label = paste(group, "->", subgroup)) -> subgroups
