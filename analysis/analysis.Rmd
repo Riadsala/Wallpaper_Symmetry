@@ -51,7 +51,7 @@ First we import our data and make some summary plots.
 
 Importing the primary SSVEP data set. This is odd-harmonic filtered data from region-of-interest consisting of six electrodes over occipital cortex.
 
-```{r, fig.cap = "SSVEP RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark nad light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
+```{r, fig.cap = "SSVEP RMS data from two of the wallpaper groups, P2 and P4M. Odd harmonics are shown in A and B, while even harmonic data are shown in C and D, and occipital and parietal regions of interest are shown in dark and light gray, respectively. The two groups elicit very different response amplitudes for odd harmonics over occipital cortex, but for even harmonics those differences are much less pronounced."}
 plt <- cowplot::ggdraw() +
   cowplot::draw_image("../figures/occTopo_merged.png")
 print(plt)
@@ -172,8 +172,8 @@ Here are the details of the Bayesian multi-level modelling. Our general approach
 
 *  Use weakly-informative priors.
 *  Fit a multi-level model using the lognormal distribution.
-  + independent variable (wallpaper group) and one dependent variable (rms or threshold).
-  + maximal random effect structure.
+  + Independent variable (wallpaper group) and one dependent variable (rms or threshold).
+  + Maximal random effect structure.
 * Extract mcmc samples from the posterior distributions.
 * Use these samples to estimate the difference between sub- and supergroups.
 
@@ -258,10 +258,9 @@ m_threshold <- brm(data = d_dispthresh,
 ```
 
 
-
 We will now look at the model's predicts for the average participant (i.e, ignoring the random intercepts). 
 
-```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the blue line shows the 66% and 95% prediction intervals."}
+```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the red line shows the 66% and 95% prediction intervals."}
 
  # Extract samples from model
 my_samples$eeg <- get_model_samples(m_eeg)
