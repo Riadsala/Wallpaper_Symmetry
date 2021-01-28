@@ -257,7 +257,6 @@ m_threshold <- brm(data = d_dispthresh,
                    control = list(adapt_delta = 0.99))
 ```
 
-
 We will now look at the model's predicts for the average participant (i.e, ignoring the random intercepts). 
 
 ```{r, fig.cap ="The density plot shows the distribution of the empirical data, while the red line shows the 66% and 95% prediction intervals."}
