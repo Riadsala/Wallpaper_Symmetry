@@ -634,7 +634,7 @@ bR2 <- bayes_R2(m)
 print(bR2)
 ```
 
-We can see that although the correlation is relatively weak, our confidence interval indicates that we can be reasonably positive that $R^2>0$ (i.e, 95\% credible interval is `r round(bR2[3],2)` - `r round(bR2[4], 2)`). 
+The confidence interval indicates that we can be confident that $R^2>0$ (i.e, 95\% credible interval is `r round(bR2[3],2)` - `r round(bR2[4], 2)`). 
 
 ```{r fig.cap="Scatter plot showing the correlation between our two measures. Each line is a sample from the posterior of a Bayesian linear regression."}
 
