@@ -8,6 +8,7 @@
 \hypersetup{colorlinks=false}
 \usepackage{natbib}
 \usepackage{geometry}
+\usepackage{amsmath}
  \geometry{a4paper, total={170mm,257mm}, left=20mm, top=20mm}
 
 \renewcommand{\baselinestretch}{1.3}
@@ -120,6 +121,8 @@ Response waveforms were generated for each group by selective filtering in the f
 In order to get the complete list of subgroup relationships, we digitized Table 4 from Coxeter \citep{RN1711} (shown in Supplementary Table 1.2). After removing identity relationships (i.e. each group is a subgroup of itself) and the three pairs of wallpapers groups that are subgroups of each other (e.g. \textit{PM} is a subgroup of \textit{CM}, and \textit{CM} is a subgroup of \textit{PM}) we were left with a total of 63 unambiguous subgroups that were included in our analysis. 
 
 \subsection*{Bayesian Analysis of SSVEP and Psychophysical data}
+
+Bayesian analysis was carried out using R (v3.6.1) \citep{R} with the \texttt{brms} package (v2.9.0) \citep{burkner2017} and rStan (v2.19.2 \citep{rStan}). The data from each experiment were modelled using a Bayesian generalised mixed effect model with wallpaper group being treated as a 16 level factor, and random effects for participant. The SSVEP data and symmetry detection threshold durations were modelled using log-normal distributions with weakly informative, $ \mathcal{N}(0, 2)$, priors. After fitting the model to the data, samples were drawn from the posterior distribution of the two datasets, for each wallpaper group. These samples were then recombined to calculate the distribution of differences for each of the 63 pairs of subgroup and supergroup. These distributions were then summarised by computing the conditional probability of obtaining a positive (negative) difference, $p(\Delta | \text{data})$. For further technical details, please see the Supplementary Materials at \url{https://osf.io/f3ex8/} where the full R code, model specification, prior and posterior predicitive checks, and model diagnoastics, can be found. 
 
 % Bibliography
 \begin{multicols}{2}
