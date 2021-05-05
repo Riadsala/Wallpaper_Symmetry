@@ -10,7 +10,14 @@
 \usepackage{amsmath}
 \usepackage{lineno}
 \usepackage[dvipsnames]{xcolor}
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
 
 \linenumbers
  \geometry{a4paper, total={170mm,257mm}, left=20mm, top=20mm}
@@ -132,7 +139,7 @@ In order to get the complete list of subgroup relationships, we digitized Table 
 
 \subsection*{Bayesian Analysis of SSVEP and Psychophysical data}
 
-Bayesian analysis was carried out using R (v3.6.1) \citep{R} with the \texttt{brms} package (v2.9.0) \citep{burkner2017} and rStan (v2.19.2 \citep{rStan}). The data from each experiment were modelled using a Bayesian generalised mixed effect model with wallpaper group being treated as a 16-level factor, and random effects for participant. The SSVEP data and symmetry detection threshold durations were modelled using log-normal distributions with weakly informative, $ \mathcal{N}(0, 2)$, priors. After fitting the model to the data, samples were drawn from the posterior distribution of the two datasets, for each wallpaper group. These samples were then recombined to calculate the distribution of differences for each of the 63 pairs of subgroup and supergroup. These distributions were then summarised by computing the conditional probability of obtaining a positive (negative) difference, $p(\Delta | \text{data})$. For further technical details, please see the Supplementary Materials at \texttt{https://osf.io/f3ex8/} where the full R code, model specification, prior and posterior predictive checks, and model diagnostics, can be found. 
+Bayesian analysis was carried out using R (v3.6.1) \citep{R} with the \texttt{brms} package (v2.9.0) \citep{burkner2017} and rStan (v2.19.2 \citep{rStan}). The data from each experiment were modelled using a Bayesian generalised mixed effect model with wallpaper group being treated as a 16-level factor, and random effects for participant. The SSVEP data and symmetry detection threshold durations were modelled using log-normal distributions with weakly informative, $ \mathcal{N}(0, 2)$, priors. After fitting the model to the data, samples were drawn from the posterior distribution of the two datasets, for each wallpaper group. These samples were then recombined to calculate the distribution of differences for each of the 63 pairs of subgroup and supergroup. These distributions were then summarised by computing the conditional probability of obtaining a positive (negative) difference, $p(\Delta | \text{data})$. For further technical details, please see \href{https://osf.io/f3ex8/}{the Supplementary Materials} where the full R code, model specification, prior and posterior predictive checks, and model diagnostics, can be found. 
 
 % Bibliography
 \begin{multicols}{2}
