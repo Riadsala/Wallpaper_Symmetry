@@ -1,7 +1,7 @@
 ---
-title: "Supplementary Materials"
+title: "The human visual system preserves the hierarchy of 2-dimensional pattern regularity: Supplementary Materials"
 author: "Peter J. Kohler and Alasdair D. F. Clarke"
-date:
+date: 10.1098/rspb.2021.1142
 output: bookdown::html_document2
 ---
 
