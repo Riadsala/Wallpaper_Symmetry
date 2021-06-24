@@ -1,9 +1,15 @@
 ---
-title: "The human visual system preserves the hierarchy of 2-dimensional pattern regularity: Supplementary Materials"
+title: "Supplementary Materials: The human visual system preserves the hierarchy of 2-dimensional pattern regularity"
 author: "Peter J. Kohler and Alasdair D. F. Clarke"
-date: 10.1098/rspb.2021.1142
+date: 
 output: bookdown::html_document2
 ---
+
+These are the supplementary materials for:
+
+Kohler, P. J., & Clarke, A. D. (2021). The human visual system preserves the hierarchy of 2-dimensional pattern regularity. Proceedings of the Royal Society B: Biological Sciences. 10.1098/rspb.2021.1142
+
+
 
 I have set `echo=FALSE` so that most of the code chunks will not display. Please refer to the .Rmd file for source code.
 
