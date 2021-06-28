@@ -11,7 +11,7 @@ Kohler, P. J., & Clarke, A. D. (2021). The human visual system preserves the hie
 Created using Keynote (figure1.key) based on the images found in ./figures/figure1/wade_examples (adapted from Wade, 1993). 
 
 * **Figure 2**
-Created using [Inkscape](https://inkscape.org/) (figure2.svg) by combining odd_occ_wave.pdf (generated using Matlab code - available upon request) and display_dur_boxplots.pdf (generated using ./analysis/disp_dur_plot_for_paper.R) with images found in ./figures/figure2/sym_examples
+Created using [Inkscape](https://inkscape.org/) by combining odd_occ_wave.pdf (generated using Matlab code - available upon request) and display_dur_boxplots.pdf (generated using ./analysis/disp_dur_plot_for_paper.R) with images found in ./figures/figure2/sym_examples
 
 * **Figure 3** 
 Generated using ./analysis/analysis.html. 
