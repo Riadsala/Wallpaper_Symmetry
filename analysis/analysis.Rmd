@@ -393,7 +393,7 @@ p2 <-plot_comparisons(
 
 both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
 both_plts
-ggsave("plots/subgroup_comp_eeg_rms.png", width = 5.5, height = 8)
+ggsave("plots/subgroup_comp_eeg_rms.pdf", width = 5.5, height = 8)
 ```
 
 ## Psychophysical Data
@@ -423,7 +423,7 @@ p2 <- plot_comparisons(
 
 both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
 both_plts
-ggsave("plots/subgroup_comp_psychophysical.png",  width = 5.5, height = 8)
+ggsave("plots/subgroup_comp_psychophysical.pdf",  width = 5.5, height = 8)
 ```
 
 ## Control SSVEP Data
