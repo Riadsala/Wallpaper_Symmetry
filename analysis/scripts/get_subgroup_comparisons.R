@@ -57,7 +57,7 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
     }
 
     #if (fig_n == 1) {
-        plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank(), nrow = 2)) +
+        plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank(), nrow = 1)) +
           theme(
             legend.position = 'bottom',
             axis.text.y = element_text(face = "italic"),
