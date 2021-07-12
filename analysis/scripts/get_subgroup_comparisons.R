@@ -49,25 +49,23 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
         ggthemes::scale_colour_ptol(drop = FALSE) +
         theme(
             legend.position = 'bottom',
-            axis.text.y = element_text(
-            face = "italic", #if_else(l$normal==0, "italic", "plain"),
-            colour = l$lab_cols),
+            axis.text.y = element_text(face = "italic"),
             axis.title.y = element_blank(),
             plot.margin=unit(c(0,0.25,0,0.25),"cm"))  
        
      if (is_thresholds) {
         plt <- plt + coord_cartesian((xlim = c(-2.2, 0.7))) + 
-            scale_fill_viridis_d("p(difference < 0 | data)", option = "plasma", drop = FALSE)  
+            scale_fill_grey("p(difference < 0 | data)", start = 1, end = 0.1, drop = FALSE)  
     } else {
          plt <- plt + coord_cartesian((xlim = c(-0.5, 1.5))) + 
-            scale_fill_viridis_d("p(difference > 0 | data)", option = "plasma", drop = FALSE) 
+            scale_fill_grey("p(difference > 0 | data)", start = 1, end = 0.1, drop = FALSE) 
     }
 
-    if (fig_n == 1) {
+    #if (fig_n == 1) {
         plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank(), nrow = 2))
-    } else {
-        plt <- plt + guides(fill = FALSE, colour = guide_legend(title.postion = "top", nrow = 2))
-    }
+   # } else {
+    #    plt <- plt + guides(fill = FALSE, colour = guide_legend(title.postion = "top", nrow = 2))
+   # }
 
     
     return(plt)
