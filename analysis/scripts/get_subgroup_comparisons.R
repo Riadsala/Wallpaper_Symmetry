@@ -46,12 +46,7 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
         scale_x_continuous('pdf for subgroup difference', expand = c(0,0), breaks = seq(-2, 1, 0.5)) +
         scale_y_discrete(labels = levels(d$key)) + #labels = lapply(levels(subgroup_comp$key), TeX)
         theme_minimal() +        
-        ggthemes::scale_colour_ptol(drop = FALSE) +
-        theme(
-            legend.position = 'bottom',
-            axis.text.y = element_text(face = "italic"),
-            axis.title.y = element_blank(),
-            plot.margin=unit(c(0,0.25,0,0.25),"cm"))  
+        ggthemes::scale_colour_ptol(drop = FALSE) 
        
      if (is_thresholds) {
         plt <- plt + coord_cartesian((xlim = c(-2.2, 0.7))) + 
@@ -62,7 +57,12 @@ plot_comparisons <- function(d, l, fig_n, is_thresholds = FALSE)
     }
 
     #if (fig_n == 1) {
-        plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank(), nrow = 2))
+        plt <- plt + guides(colour = FALSE, fill = guide_legend(title = element_blank(), nrow = 2)) +
+          theme(
+            legend.position = 'bottom',
+            axis.text.y = element_text(face = "italic"),
+            axis.title.y = element_blank(),
+            plot.margin=unit(c(0,0.25,0,0.25),"cm"))  
    # } else {
     #    plt <- plt + guides(fill = FALSE, colour = guide_legend(title.postion = "top", nrow = 2))
    # }

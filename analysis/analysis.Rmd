@@ -391,7 +391,7 @@ p2 <-plot_comparisons(
   filter(comp_summary$eeg, index != 2), 
   2)
 
-both_plts <- cowplot::plot_grid(p1, p2, ncol = 2, align="hv")
+both_plts <- p1 + p2 +  plot_layout(guides = 'collect')  & theme(legend.position = 'bottom')
 both_plts
 ggsave("plots/subgroup_comp_eeg_rms.pdf", width = 5.5, height = 8)
 ```
