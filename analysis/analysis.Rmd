@@ -393,7 +393,7 @@ p2 <-plot_comparisons(
 
 both_plts <- p1 + p2 +  plot_layout(guides = 'collect')  & theme(legend.position = 'bottom')
 both_plts
-ggsave("plots/subgroup_comp_eeg_rms.pdf", width = 5.5, height = 8)
+ggsave("plots/subgroup_comp_eeg_rms.pdf", width = 5.5, height = 8, device =  cairo_pdf)
 ```
 
 ## Psychophysical Data
@@ -423,7 +423,7 @@ p2 <- plot_comparisons(
 
 both_plts <- p1 + p2 +  plot_layout(guides = 'collect')  & theme(legend.position = 'bottom')
 both_plts
-ggsave("plots/subgroup_comp_psychophysical.pdf",  width = 5.5, height = 8)
+ggsave("plots/subgroup_comp_psychophysical.pdf",  width = 5.5, height = 8, device =  cairo_pdf)
 ```
 
 ## Control SSVEP Data
